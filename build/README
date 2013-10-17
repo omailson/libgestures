@@ -1,0 +1,1 @@
+cmake -DCMAKE_TOOLCHAIN_FILE=../build/android.toolchain.cmake -DANDROID_API_LEVEL=18 -H. -Bbuild ..
