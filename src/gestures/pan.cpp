@@ -15,6 +15,16 @@ PanRecognizer::PanRecognizer()
 {
 }
 
+GestureRecognizer::Action PanRecognizer::recognize(Gesture *gesture, const NIXTouchEvent &event)
+{
+    return Ignore;
+}
+
+Gesture *PanRecognizer::create()
+{
+    return new PanGesture();
+}
+
 PanRecognizer::~PanRecognizer()
 {
 }

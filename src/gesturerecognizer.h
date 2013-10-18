@@ -16,9 +16,9 @@ public:
         /* ConsumeEventHint*/
     };
 
-    virtual Action recognize(Gesture *gesture, NIXTouchEvent *event);
+    virtual Action recognize(Gesture *gesture, const NIXTouchEvent &event) = 0;
 
-    virtual Gesture *create();
+    virtual Gesture *create() = 0;
 
     GestureRecognizer();
 };
