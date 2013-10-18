@@ -22,7 +22,7 @@ public:
     /* void reset(Gesture *gesture); */
 
     GestureRecognizer();
-    ~GestureRecognizer();
+    virtual ~GestureRecognizer();
 };
 
 #endif // GESTURERECOGNIZER_H
