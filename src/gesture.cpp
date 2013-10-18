@@ -2,14 +2,13 @@
 #include "gesture.h"
 
 Gesture::Gesture()
-    : m_gestureType(GestureType::NoGesture),
-      m_gestureState(GestureState::GestureStarted)
+    : m_gestureState(GestureState::GestureStarted)
 {
 }
 
 Gesture::GestureType Gesture::gestureType() const
 {
-    return m_gestureType;
+    return GestureType::NoGesture;
 }
 
 Gesture::GestureState Gesture::gestureState() const

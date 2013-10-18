@@ -15,13 +15,12 @@ public:
         GestureCanceled
     };
 
-    GestureType gestureType() const;
+    virtual GestureType gestureType() const;
     GestureState gestureState() const;
 
     Gesture();
 
 private:
-    GestureType m_gestureType;
     GestureState m_gestureState;
 };
 
