@@ -3,9 +3,12 @@
 #include <unistd.h>
 
 #include <NIXEvents.h>
+#include <WebKit2/WKBaseNix.h>
+#include <NIXView.h>
+
 #include "ainputeventhelper.h"
 
-NIXTouchEvent convertToNIXTouchEvent(const AInputEvent *ev)
+NIXTouchEvent convertToNIXTouchEvent(const AInputEvent *ev, WKViewRef webView)
 {
     NIXTouchEvent nixEv;
     memset(&nixEv, 0, sizeof(NIXTouchEvent));
@@ -17,10 +20,10 @@ NIXTouchEvent convertToNIXTouchEvent(const AInputEvent *ev)
         NIXTouchPoint touchPoint;
         touchPoint.state = convertToTouchPointState(ev, i);
         touchPoint.id = AMotionEvent_getPointerId(ev, i);
-        //WKPoint p = WKViewUserViewportToContents(m_webView,
-        //        WKPointMake(AMotionEvent_getX(ev, i), AMotionEvent_getY(ev, i)));
-        //touchPoint.x = p.x;
-        //touchPoint.y = p.y;
+        WKPoint p = WKViewUserViewportToContents(webView,
+                    WKPointMake(AMotionEvent_getX(ev, i), AMotionEvent_getY(ev, i)));
+        touchPoint.x = p.x;
+        touchPoint.y = p.y;
 
         nixEv.touchPoints[i] = touchPoint;
     }

@@ -12,7 +12,9 @@ LOCAL_SRC_FILES := \
     gestures/pan.cpp \
     events/ainputeventhelper.cpp
 
-LOCAL_SHARED_LIBRARIES := libstlport
+LOCAL_SHARED_LIBRARIES := \
+    libstlport \
+    libWebKitNix
 
 LOCAL_C_INCLUDES := \
     ndk/sources/cxx-stl/stlport/stlport/ \
