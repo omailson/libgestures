@@ -15,3 +15,8 @@ Gesture::GestureState Gesture::gestureState() const
 {
     return m_gestureState;
 }
+
+void Gesture::setGestureState(GestureState state)
+{
+    m_gestureState = state;
+}

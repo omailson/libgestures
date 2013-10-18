@@ -19,6 +19,7 @@ public:
     GestureState gestureState() const;
 
     Gesture();
+    void setGestureState(GestureState state);
 
 private:
     GestureState m_gestureState;
