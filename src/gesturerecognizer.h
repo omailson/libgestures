@@ -19,10 +19,8 @@ public:
     virtual Action recognize(Gesture *gesture, NIXTouchEvent *event);
 
     virtual Gesture *create();
-    /* void reset(Gesture *gesture); */
 
     GestureRecognizer();
-    virtual ~GestureRecognizer();
 };
 
 #endif // GESTURERECOGNIZER_H

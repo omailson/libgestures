@@ -7,10 +7,6 @@ Gesture::Gesture()
 {
 }
 
-Gesture::~Gesture()
-{
-}
-
 Gesture::GestureType Gesture::gestureType() const
 {
     return m_gestureType;

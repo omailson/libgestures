@@ -19,7 +19,6 @@ public:
     GestureState gestureState() const;
 
     Gesture();
-    ~Gesture();
 
 private:
     GestureType m_gestureType;
