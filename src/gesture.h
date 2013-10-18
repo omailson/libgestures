@@ -15,10 +15,10 @@ public:
         GestureCanceled
     };
 
+    Gesture();
+
     virtual GestureType gestureType() const;
     GestureState gestureState() const;
-
-    Gesture();
     void setGestureState(GestureState state);
 
 private:

@@ -16,11 +16,10 @@ public:
         /* ConsumeEventHint*/
     };
 
-    virtual Action recognize(Gesture *gesture, const NIXTouchEvent &event) = 0;
-
-    virtual Gesture *create() = 0;
-
     GestureRecognizer();
+
+    virtual Action recognize(Gesture *gesture, const NIXTouchEvent &event) = 0;
+    virtual Gesture *create() = 0;
 };
 
 #endif // GESTURERECOGNIZER_H
