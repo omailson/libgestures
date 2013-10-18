@@ -5,6 +5,7 @@ set(gestures_SOURCES
   gesturerecognizer.cpp
   gesturemanager.cpp
   gestures/pan.cpp
+  gestures/tap.cpp
   events/ainputeventhelper.cpp
 )
 
