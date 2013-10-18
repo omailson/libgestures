@@ -5,6 +5,10 @@ set(gestures_SOURCES
   gesturerecognizer.cpp
   gesturemanager.cpp
   gestures/pan.cpp
+  events/ainputeventhelper.cpp
 )
 
-add_library(gestures SHARED ${gestures_SOURCES})
+link_directories(/opt/android-ndk/platforms/android-18/arch-arm/usr/lib/)
+
+add_library(gestures ${gestures_SOURCES})
+target_link_libraries(gestures android)
