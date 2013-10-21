@@ -14,7 +14,7 @@ public:
     };
 
     TapGesture();
-    GestureType gestureType() const;
+    ~TapGesture();
 
     TapState state;
     int x;
@@ -29,7 +29,7 @@ public:
     TapRecognizer();
 
     bool useTimer() const;
-    GestureRecognizer::Action recognize(TapGesture *gesture, const NIXTouchEvent &event);
+    GestureRecognizer::Action recognize(Gesture *gesture, const NIXTouchEvent &event);
     Gesture *create();
 };
 
