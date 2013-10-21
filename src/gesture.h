@@ -16,6 +16,7 @@ public:
     };
 
     Gesture();
+    virtual ~Gesture();
 
     virtual GestureType gestureType() const;
     GestureState gestureState() const;

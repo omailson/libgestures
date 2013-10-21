@@ -5,6 +5,10 @@ GestureRecognizer::GestureRecognizer()
 {
 }
 
+GestureRecognizer::~GestureRecognizer()
+{
+}
+
 bool GestureRecognizer::useTimer() const
 {
     return false;
