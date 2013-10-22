@@ -98,6 +98,6 @@ void GestureManager::registerKnowRecognizers()
 {
     m_panRecognizer = new PanRecognizer;
     m_tapRecognizer = new TapRecognizer;
-    registerRecognizer(m_panRecognizer);
+    //registerRecognizer(m_panRecognizer);
     registerRecognizer(m_tapRecognizer);
 }
