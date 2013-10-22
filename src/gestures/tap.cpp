@@ -1,6 +1,7 @@
-#include "tap.h"
-
 #include <stdlib.h>
+
+#include <gesture.h>
+#include "tap.h"
 
 TapGesture::TapGesture()
     : Gesture()
@@ -9,6 +10,11 @@ TapGesture::TapGesture()
 
 TapGesture::~TapGesture()
 {
+}
+
+Gesture::GestureType TapGesture::gestureType() const
+{
+    return Gesture::Tap;
 }
 
 TapRecognizer::TapRecognizer()

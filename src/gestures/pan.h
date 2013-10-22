@@ -9,6 +9,8 @@ class PanGesture : public Gesture {
 public:
     PanGesture();
     ~PanGesture();
+
+    GestureType gestureType() const;
 };
 
 class PanRecognizer : public GestureRecognizer {

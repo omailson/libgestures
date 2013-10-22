@@ -16,6 +16,8 @@ public:
     TapGesture();
     ~TapGesture();
 
+    GestureType gestureType() const;
+
     TapState state;
     int x;
     int y;

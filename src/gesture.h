@@ -5,7 +5,9 @@
 class Gesture {
 public:
     enum GestureType {
-        NoGesture
+        NoGesture,
+        Tap,
+        Pan
     };
 
     enum GestureState {

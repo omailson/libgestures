@@ -1,4 +1,5 @@
 
+#include <gesture.h>
 #include "pan.h"
 
 PanGesture::PanGesture()
@@ -8,6 +9,11 @@ PanGesture::PanGesture()
 
 PanGesture::~PanGesture()
 {
+}
+
+Gesture::GestureType PanGesture::gestureType() const
+{
+    return Gesture::Pan;
 }
 
 PanRecognizer::PanRecognizer()
