@@ -40,8 +40,8 @@ GestureRecognizer::Action TapRecognizer::recognize(Gesture *gesture, const NIXTo
         case TapGesture::NoGesture:
             if (ev.type == kNIXInputEventTypeTouchStart) {
                 tapGesture->state = TapGesture::TapStarted;
-                tapGesture->x = ev.x;
-                tapGesture->y = ev.y;
+                tapGesture->x = ev.touchPoints[0].x;
+                tapGesture->y = ev.touchPoints[0].y;
                 tapGesture->verticalRadius = ev.touchPoints[0].verticalRadius;
                 tapGesture->horizontalRadius = ev.touchPoints[0].horizontalRadius;
                 return MayBeGesture;
