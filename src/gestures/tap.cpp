@@ -5,6 +5,7 @@
 
 TapGesture::TapGesture()
     : Gesture()
+    , state(NoGesture)
 {
 }
 
@@ -53,7 +54,7 @@ GestureRecognizer::Action TapRecognizer::recognize(Gesture *gesture, const NIXTo
                 tapGesture->state = TapGesture::TapFinished;
                 tapGesture->setGestureState(Gesture::GestureFinished);
 
-                return TriggerGesture;
+                return FinishGesture;
             } else if (ev.type == kNIXInputEventTypeTouchMove) {
                 int moved = abs(tapGesture->x - ev.x) + abs(tapGesture->y - ev.y);
                 if (moved > 40)
