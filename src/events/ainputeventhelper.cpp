@@ -20,10 +20,8 @@ NIXTouchEvent convertToNIXTouchEvent(const AInputEvent *ev, WKViewRef webView)
         NIXTouchPoint touchPoint;
         touchPoint.state = convertToTouchPointState(ev, i);
         touchPoint.id = AMotionEvent_getPointerId(ev, i);
-        WKPoint p = WKViewUserViewportToContents(webView,
-                    WKPointMake(AMotionEvent_getX(ev, i), AMotionEvent_getY(ev, i)));
-        touchPoint.x = p.x;
-        touchPoint.y = p.y;
+        touchPoint.x = AMotionEvent_getX(ev, i);
+        touchPoint.y = AMotionEvent_getY(ev, i);
 
         nixEv.touchPoints[i] = touchPoint;
     }

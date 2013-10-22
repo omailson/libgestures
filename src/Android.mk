@@ -14,8 +14,7 @@ LOCAL_SRC_FILES := \
     events/ainputeventhelper.cpp
 
 LOCAL_SHARED_LIBRARIES := \
-    libstlport \
-    libWebKitNix
+    libstlport
 
 LOCAL_C_INCLUDES := \
     ndk/sources/cxx-stl/stlport/stlport/ \
