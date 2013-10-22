@@ -2,6 +2,7 @@
 
 #include <gesture.h>
 #include "tap.h"
+#include "events/gesturetouchevent.h"
 
 TapGesture::TapGesture()
     : Gesture()
@@ -33,12 +34,12 @@ Gesture *TapRecognizer::create()
     return new TapGesture();
 }
 
-GestureRecognizer::Action TapRecognizer::recognize(Gesture *gesture, const NIXTouchEvent &ev)
+GestureRecognizer::Action TapRecognizer::recognize(Gesture *gesture, const GestureTouchEvent &ev)
 {
     TapGesture *tapGesture = static_cast<TapGesture*>(gesture);
     switch(tapGesture->state) {
         case TapGesture::NoGesture:
-            if (ev.type == kNIXInputEventTypeTouchStart) {
+            if (ev.type == GestureTouchEvent::TouchStart) {
                 tapGesture->state = TapGesture::TapStarted;
                 tapGesture->x = ev.touchPoints[0].x;
                 tapGesture->y = ev.touchPoints[0].y;
@@ -50,12 +51,12 @@ GestureRecognizer::Action TapRecognizer::recognize(Gesture *gesture, const NIXTo
             break;
 
         case TapGesture::TapStarted:
-            if (ev.type == kNIXInputEventTypeTouchEnd) {
+            if (ev.type == GestureTouchEvent::TouchEnd) {
                 tapGesture->state = TapGesture::TapFinished;
                 tapGesture->setGestureState(Gesture::GestureFinished);
 
                 return FinishGesture;
-            } else if (ev.type == kNIXInputEventTypeTouchMove) {
+            } else if (ev.type == GestureTouchEvent::TouchMove) {
                 int moved = abs(tapGesture->x - ev.touchPoints[0].x) + abs(tapGesture->y - ev.touchPoints[0].y);
                 if (moved > 40)
                     return CancelGesture;

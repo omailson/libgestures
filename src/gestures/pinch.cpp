@@ -4,6 +4,7 @@
 #include <gesture.h>
 #include "pinch.h"
 #include "pinch_p.h"
+#include "events/gesturetouchevent.h"
 
 /****************
  * PinchGesture *
@@ -75,13 +76,13 @@ Gesture *PinchRecognizer::create()
     return new PinchGesture();
 }
 
-GestureRecognizer::Action PinchRecognizer::recognize(Gesture *gesture, const NIXTouchEvent &event)
+GestureRecognizer::Action PinchRecognizer::recognize(Gesture *gesture, const GestureTouchEvent &event)
 {
     PinchGesture *pinchGesture = static_cast<PinchGesture *>(gesture);
     switch(pinchGesture->d->state) {
         case PinchGesturePrivate::NoGesture:
         case PinchGesturePrivate::PinchOneFinger:
-            if (event.type != kNIXInputEventTypeTouchStart)
+            if (event.type != GestureTouchEvent::TouchStart)
                 return Action::CancelGesture; // Ignore?
 
             if (event.numTouchPoints == 1)
@@ -98,7 +99,7 @@ GestureRecognizer::Action PinchRecognizer::recognize(Gesture *gesture, const NIX
                                        event.touchPoints[1].x, event.touchPoints[1].y);
 
         case PinchGesturePrivate::PinchMoving:
-            if (event.type != kNIXInputEventTypeTouchMove) {
+            if (event.type != GestureTouchEvent::TouchMove) {
                 pinchGesture->d->state = PinchGesturePrivate::PinchFinished;
                 pinchGesture->setGestureState(Gesture::GestureFinished);
                 return Action::CancelGesture;

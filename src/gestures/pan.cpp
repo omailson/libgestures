@@ -3,6 +3,8 @@
 #include "pan.h"
 #include "pan_p.h"
 
+#include "events/gesturetouchevent.h"
+
 PanGesturePrivate::PanGesturePrivate()
     : state(NoGesture)
 {
@@ -29,12 +31,12 @@ PanRecognizer::PanRecognizer()
 {
 }
 
-GestureRecognizer::Action PanRecognizer::recognize(Gesture *gesture, const NIXTouchEvent &ev)
+GestureRecognizer::Action PanRecognizer::recognize(Gesture *gesture, const GestureTouchEvent &ev)
 {
     PanGesture *panGesture = static_cast<PanGesture*>(gesture);
     switch (panGesture->d->state) {
         case PanGesturePrivate::NoGesture:
-            if (ev.type == kNIXInputEventTypeTouchStart) {
+            if (ev.type == GestureTouchEvent::TouchStart) {
                 panGesture->d->state = PanGesturePrivate::WaitingMove;
                 panGesture->x = ev.touchPoints[0].x;
                 panGesture->y = ev.touchPoints[0].y;
@@ -43,7 +45,7 @@ GestureRecognizer::Action PanRecognizer::recognize(Gesture *gesture, const NIXTo
             break;
 
         case PanGesturePrivate::WaitingMove:
-            if (ev.type == kNIXInputEventTypeTouchMove) {
+            if (ev.type == GestureTouchEvent::TouchMove) {
                 int diff = abs(panGesture->x - ev.touchPoints[0].x)
                     + abs(panGesture->y - ev.touchPoints[0].y);
 
@@ -63,7 +65,7 @@ GestureRecognizer::Action PanRecognizer::recognize(Gesture *gesture, const NIXTo
             break;
 
         case PanGesturePrivate::Moving:
-            if (ev.type == kNIXInputEventTypeTouchMove) {
+            if (ev.type == GestureTouchEvent::TouchMove) {
                 panGesture->setGestureState(Gesture::GestureUpdated);
                 panGesture->deltaX = ev.touchPoints[0].x - panGesture->x;
                 panGesture->deltaY = ev.touchPoints[0].y - panGesture->y;
@@ -71,7 +73,7 @@ GestureRecognizer::Action PanRecognizer::recognize(Gesture *gesture, const NIXTo
                 panGesture->y = ev.touchPoints[0].y;
 
                 return TriggerGesture;
-            } else if (ev.type == kNIXInputEventTypeTouchEnd) {
+            } else if (ev.type == GestureTouchEvent::TouchEnd) {
                 panGesture->setGestureState(Gesture::GestureFinished);
                 panGesture->deltaX = ev.touchPoints[0].x - panGesture->x;
                 panGesture->deltaY = ev.touchPoints[0].y - panGesture->y;

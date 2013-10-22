@@ -4,6 +4,8 @@
 #include "gesture.h"
 #include "gesturerecognizer.h"
 
+struct GestureTouchEvent;
+
 class TapGesture : public Gesture
 {
 public:
@@ -31,7 +33,7 @@ public:
     TapRecognizer();
 
     bool useTimer() const;
-    GestureRecognizer::Action recognize(Gesture *gesture, const NIXTouchEvent &event);
+    GestureRecognizer::Action recognize(Gesture *gesture, const GestureTouchEvent &event);
     Gesture *create();
 };
 

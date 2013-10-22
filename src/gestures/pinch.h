@@ -6,6 +6,8 @@
 #include <gesturerecognizer.h>
 #include "pinch_p.h"
 
+struct GestureTouchEvent;
+
 class PinchGesture : public Gesture {
 public:
     PinchGesture();
@@ -28,7 +30,7 @@ public:
     ~PinchRecognizer();
 
     bool useTimer() const;
-    Action recognize(Gesture *gesture, const NIXTouchEvent &event);
+    Action recognize(Gesture *gesture, const GestureTouchEvent &event);
     Gesture *create();
 };
 

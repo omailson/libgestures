@@ -18,11 +18,6 @@ LOCAL_SHARED_LIBRARIES := \
     libstlport
 
 LOCAL_C_INCLUDES := \
-    ndk/sources/cxx-stl/stlport/stlport/ \
-    hydralibs/webkit-nix/Source \
-    hydralibs/webkit-nix/include \
-    hydralibs/webkit-nix/include/WebKit2 \
-    hydralibs/webkit-nix/include/Platform \
-    hydralibs/webkit-nix/include/JavaScriptCore
+    ndk/sources/cxx-stl/stlport/stlport/
 
 include $(BUILD_SHARED_LIBRARY)

@@ -4,6 +4,7 @@
 #include "gestures/pan.h"
 #include "gestures/tap.h"
 #include "gestures/pinch.h"
+#include "events/gesturetouchevent.h"
 
 GestureManagerPrivate::GestureManagerPrivate(GestureManager *parent)
     : m_parent(parent)
@@ -55,7 +56,7 @@ GestureManager::~GestureManager()
     delete d;
 }
 
-Gesture* GestureManager::sendEvent(NIXTouchEvent *event, unsigned int timestamp)
+Gesture* GestureManager::sendEvent(GestureTouchEvent *event, unsigned int timestamp)
 {
     if (!event && d->m_availableGestures == 0)
         return NULL;

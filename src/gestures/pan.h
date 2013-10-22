@@ -5,6 +5,7 @@
 #include <gesturerecognizer.h>
 
 class PanGesturePrivate;
+class GestureTouchEvent;
 
 class PanGesture : public Gesture {
 public:
@@ -28,7 +29,7 @@ public:
     PanRecognizer();
     ~PanRecognizer();
 
-    Action recognize(Gesture *gesture, const NIXTouchEvent &event);
+    Action recognize(Gesture *gesture, const GestureTouchEvent &event);
     Gesture *create();
 };
 

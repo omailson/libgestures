@@ -2,90 +2,73 @@
 #include <android/input.h>
 #include <unistd.h>
 
-#include <NIXEvents.h>
-#include <WebKit2/WKBaseNix.h>
-#include <NIXView.h>
-
 #include "ainputeventhelper.h"
 
-NIXTouchEvent convertToNIXTouchEvent(const AInputEvent *ev)
+GestureTouchEvent convertToGestureTouchEvent(const AInputEvent *ev)
 {
-    NIXTouchEvent nixEv;
-    memset(&nixEv, 0, sizeof(NIXTouchEvent));
-    nixEv.timestamp = (double) AMotionEvent_getEventTime(ev);
-    nixEv.type = convertToTouchEventType(ev);
+    GestureTouchEvent touchEv;
+    touchEv.timestamp = (double) AMotionEvent_getEventTime(ev);
+    touchEv.type = convertToTouchEventType(ev);
 
-    nixEv.numTouchPoints = AMotionEvent_getPointerCount(ev);
-    for (unsigned int i = 0; i < nixEv.numTouchPoints; i++) {
-        NIXTouchPoint touchPoint;
+    touchEv.numTouchPoints = AMotionEvent_getPointerCount(ev);
+    for (unsigned int i = 0; i < touchEv.numTouchPoints; i++) {
+        GestureTouchPoint touchPoint;
         touchPoint.state = convertToTouchPointState(ev, i);
         touchPoint.id = AMotionEvent_getPointerId(ev, i);
         touchPoint.x = AMotionEvent_getX(ev, i);
         touchPoint.y = AMotionEvent_getY(ev, i);
 
-        nixEv.touchPoints[i] = touchPoint;
+        touchEv.touchPoints[i] = touchPoint;
     }
 
-    return nixEv;
+    return touchEv;
 }
 
-NIXInputEventType convertToTouchEventType(const AInputEvent *ev)
+GestureTouchEvent::EventType convertToTouchEventType(const AInputEvent *ev)
 {
     int32_t action = AMotionEvent_getAction(ev);
     action = action & AMOTION_EVENT_ACTION_MASK;
 
     if (action == AMOTION_EVENT_ACTION_DOWN
             || action == AMOTION_EVENT_ACTION_POINTER_DOWN)
-        return kNIXInputEventTypeTouchStart;
+        return GestureTouchEvent::TouchStart;
     else if (action == AMOTION_EVENT_ACTION_UP
             || action == AMOTION_EVENT_ACTION_POINTER_UP)
-        return kNIXInputEventTypeTouchEnd;
+        return GestureTouchEvent::TouchEnd;
     else if (action == AMOTION_EVENT_ACTION_MOVE)
-        return kNIXInputEventTypeTouchMove;
+        return GestureTouchEvent::TouchMove;
     else
-        return kNIXInputEventTypeTouchCancel;
+        return GestureTouchEvent::TouchCancel;
 }
 
-NIXTouchPointState convertToTouchPointState(const AInputEvent *ev, size_t pointerIndex)
+GestureTouchPoint::State convertToTouchPointState(const AInputEvent *ev, size_t pointerIndex)
 {
     int32_t action = AMotionEvent_getAction(ev);
 
     // Simple actions performed by the primary pointer
     if (action == AMOTION_EVENT_ACTION_DOWN)
-        return kNIXTouchPointStateTouchPressed;
+        return GestureTouchPoint::TouchPressed;
     else if (action == AMOTION_EVENT_ACTION_UP)
-        return kNIXTouchPointStateTouchReleased;
+        return GestureTouchPoint::TouchReleased;
 
     // Actions that occur regardless of the pointer index
     if (action == AMOTION_EVENT_ACTION_MOVE)
-        return kNIXTouchPointStateTouchMoved;
+        return GestureTouchPoint::TouchMoved;
     else if (action == AMOTION_EVENT_ACTION_CANCEL)
-        return kNIXTouchPointStateTouchCancelled;
+        return GestureTouchPoint::TouchCancelled;
 
     // Index where the action occurred
     size_t actionIndex = (action & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
         >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
 
     if (pointerIndex != actionIndex)
-        return kNIXTouchPointStateTouchStationary;
+        return GestureTouchPoint::TouchStationary;
 
     int32_t actionMasked = action & AMOTION_EVENT_ACTION_MASK;
     if (actionMasked == AMOTION_EVENT_ACTION_POINTER_DOWN)
-        return kNIXTouchPointStateTouchPressed;
+        return GestureTouchPoint::TouchPressed;
     else if (actionMasked == AMOTION_EVENT_ACTION_POINTER_UP)
-        return kNIXTouchPointStateTouchReleased;
+        return GestureTouchPoint::TouchReleased;
 
-    return kNIXTouchPointStateTouchStationary;
-}
-
-NIXInputEventType convertToMouseEventType(const AInputEvent *ev)
-{
-    int32_t action = AMotionEvent_getAction(ev);
-
-    if (action == AMOTION_EVENT_ACTION_DOWN)
-        return kNIXInputEventTypeMouseDown;
-    else if (action == AMOTION_EVENT_ACTION_UP)
-        return kNIXInputEventTypeMouseUp;
-
-    return kNIXInputEventTypeMouseUp;
+    return GestureTouchPoint::TouchStationary;
 }

@@ -2,7 +2,7 @@
 #ifndef GESTUREMANAGER_H
 #define GESTUREMANAGER_H
 
-struct NIXTouchEvent;
+struct GestureTouchEvent;
 class Gesture;
 class GestureRecognizer;
 class GestureManagerPrivate;
@@ -12,7 +12,7 @@ public:
     GestureManager();
     ~GestureManager();
 
-    Gesture* sendEvent(NIXTouchEvent *event, unsigned int timestamp);
+    Gesture* sendEvent(GestureTouchEvent *event, unsigned int timestamp);
     void registerRecognizer(GestureRecognizer *recognizer);
 
 private:
