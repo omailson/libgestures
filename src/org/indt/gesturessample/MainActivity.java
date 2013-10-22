@@ -9,6 +9,12 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
+	public static native void nativeOnTouch(MotionEvent event);
+
+	static {
+		System.loadLibrary("gesturessample");
+	}
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,6 +24,7 @@ public class MainActivity extends Activity {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
+				nativeOnTouch(event);
 				return true;
 			}
 		});
