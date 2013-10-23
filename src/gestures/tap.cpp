@@ -56,7 +56,7 @@ GestureRecognizer::Action TapRecognizer::recognize(Gesture *gesture, const NIXTo
 
                 return FinishGesture;
             } else if (ev.type == kNIXInputEventTypeTouchMove) {
-                int moved = abs(tapGesture->x - ev.x) + abs(tapGesture->y - ev.y);
+                int moved = abs(tapGesture->x - ev.touchPoints[0].x) + abs(tapGesture->y - ev.touchPoints[0].y);
                 if (moved > 40)
                     return CancelGesture;
                 else
