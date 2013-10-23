@@ -10,6 +10,8 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
 	public static native void nativeOnTouch(MotionEvent event);
+    public static native void nativeOnStart(MainActivity activity);
+    public static native void nativeOnStop();
 
 	static {
 		System.loadLibrary("gesturessample");
@@ -28,8 +30,27 @@ public class MainActivity extends Activity {
 				return true;
 			}
 		});
+
+        // XXX: Avoid optimization
+        setGestureType("No gesture");
     }
 
+    public void setGestureType(String gestureType) {
+        TextView textView = (TextView)findViewById(R.id.text);
+        textView.setText(gestureType);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        nativeOnStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        nativeOnStop();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

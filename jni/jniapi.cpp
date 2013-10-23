@@ -2,6 +2,10 @@
 #include <jni.h>
 #include <android/input.h>
 
+#include <gesturemanager.h>
+#include <gestures/tap.h>
+#include <events/ainputeventhelper.h>
+
 #include "jniapi.h"
 #include "logger.h"
 
@@ -9,6 +13,11 @@
 
 static JavaVM *jvm = 0;
 static jclass motionEventClass;
+static jobject mainActivity;
+static GestureManager* gestureManager;
+static Gesture::GestureType currentGesture = Gesture::NoGesture;
+
+void updateGestureType(Gesture::GestureType type);
 
 JNIEnv* getEnv()
 {
@@ -41,10 +50,17 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*)
     return JNI_VERSION_1_6;
 }
 
-JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeOnStart(JNIEnv* jenv, jobject)
+JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeOnStart(JNIEnv* jenv, jobject, jobject activity)
 {
     LOG_INFO("nativeOnStart");
-    return;
+    gestureManager = new GestureManager();
+    mainActivity = jenv->NewGlobalRef(activity);
+}
+
+JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeOnStop(JNIEnv* jenv, jobject)
+{
+    LOG_INFO("nativeOnStop");
+    delete gestureManager;
 }
 
 JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeOnTouch(JNIEnv *env, jobject, jobject motionEvent)
@@ -62,4 +78,42 @@ JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeOnTouch(J
     for (unsigned int i = 0; i < AMotionEvent_getPointerCount(ev); ++i) {
         LOG_INFO("id: %d; x: %f; y: %f", AMotionEvent_getPointerId(ev, i), AMotionEvent_getX(ev, i), AMotionEvent_getY(ev, i));
     }
+
+    NIXTouchEvent touchEvent = convertToNIXTouchEvent(ev);
+    Gesture *gesture = gestureManager->sendEvent(&touchEvent, 0);
+
+    if (!gesture)
+        updateGestureType(Gesture::NoGesture);
+    else
+        updateGestureType(gesture->gestureType());
+}
+
+void updateGestureType(Gesture::GestureType type)
+{
+    if (type == currentGesture)
+        return;
+
+    currentGesture = type;
+
+    jstring gestureTypeString;
+    JNIEnv *env = getEnv();
+
+    switch (currentGesture) {
+        case Gesture::NoGesture:
+            gestureTypeString = env->NewStringUTF("No gesture");
+            break;
+
+        case Gesture::Tap:
+            gestureTypeString = env->NewStringUTF("Tap");
+            break;
+
+        default:
+            gestureTypeString = env->NewStringUTF("Unknown gesture");
+            break;
+    }
+
+    jclass clazz = env->GetObjectClass(mainActivity);
+    jmethodID methodSetGestureType = env->GetMethodID(clazz, "setGestureType", "(Ljava/lang/String;)V");
+    if (methodSetGestureType)
+        env->CallVoidMethod(mainActivity, methodSetGestureType, gestureTypeString);
 }
