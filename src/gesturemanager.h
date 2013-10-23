@@ -2,10 +2,10 @@
 #ifndef GESTUREMANAGER_H
 #define GESTUREMANAGER_H
 
-#include <list>
-#include <map>
-#include "gesturerecognizer.h"
-#include "NIXEvents.h"
+struct NIXTouchEvent;
+class Gesture;
+class GestureRecognizer;
+class GestureManagerPrivate;
 
 class GestureManager {
 public:
@@ -16,16 +16,8 @@ public:
     void registerRecognizer(GestureRecognizer *recognizer);
 
 private:
-    std::list<GestureRecognizer *> m_recognizers;
-    std::map<GestureRecognizer *, Gesture *> m_gestures;
-    int m_availableGestures;
-
-    // Known recognizers
-    GestureRecognizer *m_panRecognizer;
-    GestureRecognizer *m_tapRecognizer;
-
-    void registerKnowRecognizers();
-    void createGestures();
+    GestureManagerPrivate *d;
+    friend class GestureManagerPrivate;
 };
 
 #endif // GESTUREMANAGER_H
