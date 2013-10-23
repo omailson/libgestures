@@ -9,13 +9,13 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-	public static native void nativeOnTouch(MotionEvent event);
+    public static native void nativeOnTouch(MotionEvent event);
     public static native void nativeOnStart(MainActivity activity);
     public static native void nativeOnStop();
 
-	static {
-		System.loadLibrary("gesturessample");
-	}
+    static {
+        System.loadLibrary("gesturessample");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +24,12 @@ public class MainActivity extends Activity {
         TextView textView = (TextView)findViewById(R.id.text);
         textView.setOnTouchListener(new View.OnTouchListener() {
 
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				nativeOnTouch(event);
-				return true;
-			}
-		});
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                nativeOnTouch(event);
+                return true;
+            }
+        });
 
         // XXX: Avoid optimization
         setGestureType("No gesture");
@@ -58,5 +58,5 @@ public class MainActivity extends Activity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-    
+
 }
