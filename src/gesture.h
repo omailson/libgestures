@@ -7,7 +7,8 @@ public:
     enum GestureType {
         NoGesture,
         Tap,
-        Pan
+        Pan,
+        Pinch
     };
 
     enum GestureState {

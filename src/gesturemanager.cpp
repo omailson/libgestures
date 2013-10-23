@@ -3,12 +3,14 @@
 #include "gesturemanager_p.h"
 #include "gestures/pan.h"
 #include "gestures/tap.h"
+#include "gestures/pinch.h"
 
 GestureManagerPrivate::GestureManagerPrivate(GestureManager *parent)
     : m_parent(parent)
     , m_availableGestures(0)
     , m_panRecognizer(0)
     , m_tapRecognizer(0)
+    , m_pinchRecognizer(0)
 {
 }
 
@@ -16,6 +18,7 @@ GestureManagerPrivate::~GestureManagerPrivate()
 {
     delete m_panRecognizer;
     delete m_tapRecognizer;
+    delete m_pinchRecognizer;
 }
 
 void GestureManagerPrivate::createGestures()
@@ -35,8 +38,10 @@ void GestureManagerPrivate::registerKnowRecognizers()
 {
     m_panRecognizer = new PanRecognizer;
     m_tapRecognizer = new TapRecognizer;
+    m_pinchRecognizer = new PinchRecognizer;
     //registerRecognizer(m_panRecognizer);
     m_parent->registerRecognizer(m_tapRecognizer);
+    m_parent->registerRecognizer(m_pinchRecognizer);
 }
 
 GestureManager::GestureManager()

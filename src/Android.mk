@@ -11,6 +11,7 @@ LOCAL_SRC_FILES := \
     gesturerecognizer.cpp \
     gestures/pan.cpp \
     gestures/tap.cpp \
+    gestures/pinch.cpp \
     events/ainputeventhelper.cpp
 
 LOCAL_SHARED_LIBRARIES := \

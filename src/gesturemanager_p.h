@@ -21,6 +21,7 @@ public:
     // Known recognizers
     GestureRecognizer *m_panRecognizer;
     GestureRecognizer *m_tapRecognizer;
+    GestureRecognizer *m_pinchRecognizer;
 };
 
 #endif // GESTUREMANAGER_P_H
