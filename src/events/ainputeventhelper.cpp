@@ -8,7 +8,7 @@
 
 #include "ainputeventhelper.h"
 
-NIXTouchEvent convertToNIXTouchEvent(const AInputEvent *ev, WKViewRef webView)
+NIXTouchEvent convertToNIXTouchEvent(const AInputEvent *ev)
 {
     NIXTouchEvent nixEv;
     memset(&nixEv, 0, sizeof(NIXTouchEvent));
