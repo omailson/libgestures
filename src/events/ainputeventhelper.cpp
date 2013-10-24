@@ -56,6 +56,12 @@ NIXTouchPointState convertToTouchPointState(const AInputEvent *ev, size_t pointe
     else if (action == AMOTION_EVENT_ACTION_UP)
         return kNIXTouchPointStateTouchReleased;
 
+    // Actions that occur regardless of the pointer index
+    if (action == AMOTION_EVENT_ACTION_MOVE)
+        return kNIXTouchPointStateTouchMoved;
+    else if (action == AMOTION_EVENT_ACTION_CANCEL)
+        return kNIXTouchPointStateTouchCancelled;
+
     // Index where the action occurred
     size_t actionIndex = (action & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
         >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
@@ -68,10 +74,6 @@ NIXTouchPointState convertToTouchPointState(const AInputEvent *ev, size_t pointe
         return kNIXTouchPointStateTouchPressed;
     else if (actionMasked == AMOTION_EVENT_ACTION_POINTER_UP)
         return kNIXTouchPointStateTouchReleased;
-    else if (actionMasked == AMOTION_EVENT_ACTION_MOVE)
-        return kNIXTouchPointStateTouchMoved;
-    else if (actionMasked == AMOTION_EVENT_ACTION_CANCEL)
-        return kNIXTouchPointStateTouchCancelled;
 
     return kNIXTouchPointStateTouchStationary;
 }
