@@ -97,9 +97,8 @@ Gesture* GestureManager::sendEvent(NIXTouchEvent *event, unsigned int timestamp)
     }
 
     if (candidateRecognizer && d->m_availableGestures == 1) {
-        Gesture *gesture = NULL;
+        Gesture *gesture = d->m_gestures[candidateRecognizer];
         if (candidateAction == GestureRecognizer::FinishGesture) {
-            gesture = d->m_gestures[candidateRecognizer];
             d->m_gestures[candidateRecognizer] = 0;
             d->m_availableGestures--;
         }
