@@ -32,10 +32,13 @@ NIXTouchEvent convertToNIXTouchEvent(const AInputEvent *ev)
 NIXInputEventType convertToTouchEventType(const AInputEvent *ev)
 {
     int32_t action = AMotionEvent_getAction(ev);
+    action = action & AMOTION_EVENT_ACTION_MASK;
 
-    if (action == AMOTION_EVENT_ACTION_DOWN)
+    if (action == AMOTION_EVENT_ACTION_DOWN
+            || action == AMOTION_EVENT_ACTION_POINTER_DOWN)
         return kNIXInputEventTypeTouchStart;
-    else if (action == AMOTION_EVENT_ACTION_UP)
+    else if (action == AMOTION_EVENT_ACTION_UP
+            || action == AMOTION_EVENT_ACTION_POINTER_UP)
         return kNIXInputEventTypeTouchEnd;
     else if (action == AMOTION_EVENT_ACTION_MOVE)
         return kNIXInputEventTypeTouchMove;
