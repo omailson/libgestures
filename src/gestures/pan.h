@@ -1,9 +1,10 @@
-
 #ifndef PAN_H
 #define PAN_H
 
 #include <gesture.h>
 #include <gesturerecognizer.h>
+
+class PanGesturePrivate;
 
 class PanGesture : public Gesture {
 public:
@@ -11,6 +12,15 @@ public:
     ~PanGesture();
 
     GestureType gestureType() const;
+
+    int x;
+    int y;
+    int deltaX;
+    int deltaY;
+
+private:
+    PanGesturePrivate *d;
+    friend class PanRecognizer;
 };
 
 class PanRecognizer : public GestureRecognizer {

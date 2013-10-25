@@ -39,7 +39,7 @@ void GestureManagerPrivate::registerKnowRecognizers()
     m_panRecognizer = new PanRecognizer;
     m_tapRecognizer = new TapRecognizer;
     m_pinchRecognizer = new PinchRecognizer;
-    //registerRecognizer(m_panRecognizer);
+    m_parent->registerRecognizer(m_panRecognizer);
     m_parent->registerRecognizer(m_tapRecognizer);
     m_parent->registerRecognizer(m_pinchRecognizer);
 }
