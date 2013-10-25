@@ -4,9 +4,9 @@
 
 #include <gesture.h>
 #include <gesturerecognizer.h>
-#include "pinch_p.h"
 
 struct GestureTouchEvent;
+class PinchGesturePrivate;
 
 class PinchGesture : public Gesture {
 public:
