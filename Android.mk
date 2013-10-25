@@ -19,4 +19,4 @@ endif
 
 include $(BUILD_PACKAGE)
 
-include $(call all-makefiles-under, jni)
+include $(LOCAL_PATH)/jni/Android.mk
