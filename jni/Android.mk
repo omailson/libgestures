@@ -11,11 +11,6 @@ LOCAL_SHARED_LIBRARIES := \
     libgestures
 
 LOCAL_C_INCLUDES := \
-    hydralibs/webkit-nix/Source \
-    hydralibs/webkit-nix/include \
-    hydralibs/webkit-nix/include/WebKit2 \
-    hydralibs/webkit-nix/include/Platform \
-    hydralibs/webkit-nix/include/JavaScriptCore \
     hydraapps/libgestures/src
 
 

@@ -79,7 +79,7 @@ JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeOnTouch(J
         LOG_INFO("id: %d; x: %f; y: %f", AMotionEvent_getPointerId(ev, i), AMotionEvent_getX(ev, i), AMotionEvent_getY(ev, i));
     }
 
-    NIXTouchEvent touchEvent = convertToNIXTouchEvent(ev);
+    GestureTouchEvent touchEvent = convertToGestureTouchEvent(ev);
     Gesture *gesture = gestureManager->sendEvent(&touchEvent, 0);
 
     if (!gesture)
