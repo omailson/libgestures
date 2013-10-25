@@ -111,6 +111,10 @@ void updateGestureType(Gesture::GestureType type)
             gestureTypeString = env->NewStringUTF("Pinch");
             break;
 
+        case Gesture::Pan:
+            gestureTypeString = env->NewStringUTF("Pan");
+            break;
+
         default:
             gestureTypeString = env->NewStringUTF("Unknown gesture");
             break;
