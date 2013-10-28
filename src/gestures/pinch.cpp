@@ -82,6 +82,10 @@ GestureRecognizer::Action PinchRecognizer::recognize(Gesture *gesture, const Ges
     switch(pinchGesture->d->state) {
         case PinchGesturePrivate::NoGesture:
         case PinchGesturePrivate::PinchOneFinger:
+            if (event.type == GestureTouchEvent::TouchMove
+                    && event.flags & GestureTouchEvent::GESTURE_EVENT_TINY_MOVE)
+                return Action::Ignore;
+
             if (event.type != GestureTouchEvent::TouchStart)
                 return Action::CancelGesture; // Ignore?
 
