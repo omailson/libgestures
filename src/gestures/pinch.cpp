@@ -102,7 +102,7 @@ GestureRecognizer::Action PinchRecognizer::recognize(Gesture *gesture, const Ges
             if (event.type != GestureTouchEvent::TouchMove) {
                 pinchGesture->d->state = PinchGesturePrivate::PinchFinished;
                 pinchGesture->setGestureState(Gesture::GestureFinished);
-                return Action::CancelGesture;
+                return Action::FinishGesture;
             }
 
             if (pinchGesture->d->state == PinchGesturePrivate::PinchTwoFingers)
