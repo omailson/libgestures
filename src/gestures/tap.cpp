@@ -57,11 +57,10 @@ GestureRecognizer::Action TapRecognizer::recognize(Gesture *gesture, const Gestu
 
                 return FinishGesture;
             } else if (ev.type == GestureTouchEvent::TouchMove) {
-                int moved = abs(tapGesture->x - ev.touchPoints[0].x) + abs(tapGesture->y - ev.touchPoints[0].y);
-                if (moved > 40)
-                    return CancelGesture;
-                else
+                if (ev.flags & GestureTouchEvent::GESTURE_EVENT_TINY_MOVE)
                     return Ignore;
+                else
+                    return CancelGesture;
             }
 
             return CancelGesture;

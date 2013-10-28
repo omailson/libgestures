@@ -46,10 +46,7 @@ GestureRecognizer::Action PanRecognizer::recognize(Gesture *gesture, const Gestu
 
         case PanGesturePrivate::WaitingMove:
             if (ev.type == GestureTouchEvent::TouchMove) {
-                int diff = abs(panGesture->x - ev.touchPoints[0].x)
-                    + abs(panGesture->y - ev.touchPoints[0].y);
-
-                if (diff < 50)
+                if (ev.flags & GestureTouchEvent::GESTURE_EVENT_TINY_MOVE)
                     return Ignore;
 
                 panGesture->d->state = PanGesturePrivate::Moving;
