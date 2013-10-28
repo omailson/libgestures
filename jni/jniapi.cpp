@@ -4,6 +4,8 @@
 
 #include <gesturemanager.h>
 #include <gestures/tap.h>
+#include <gestures/pinch.h>
+#include <gestures/pan.h>
 #include <events/ainputeventhelper.h>
 
 #include "jniapi.h"
@@ -18,6 +20,11 @@ static GestureManager* gestureManager;
 static Gesture::GestureType currentGesture = Gesture::NoGesture;
 
 void updateGestureType(Gesture::GestureType type);
+void pinchUpdated(double, int, int);
+void pinchStarted();
+void pinchFinished();
+void tap(int, int, int, int);
+void pan(int, int, int, int);
 
 JNIEnv* getEnv()
 {
@@ -86,6 +93,22 @@ JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeOnTouch(J
         updateGestureType(Gesture::NoGesture);
     else
         updateGestureType(gesture->gestureType());
+
+    if (gesture && gesture->gestureType() == Gesture::Pinch) {
+        PinchGesture *pinch = static_cast<PinchGesture *>(gesture);
+        if (pinch->gestureState() == Gesture::GestureStarted)
+            pinchStarted();
+        else if (pinch->gestureState() == Gesture::GestureUpdated)
+            pinchUpdated(pinch->scale, pinch->centerX, pinch->centerY);
+        else
+            pinchFinished();
+    } else if (gesture && gesture->gestureType() == Gesture::Tap) {
+        TapGesture *tapGesture = static_cast<TapGesture *>(gesture);
+        tap(tapGesture->x, tapGesture->y, tapGesture->verticalRadius, tapGesture->horizontalRadius);
+    } else if (gesture && gesture->gestureType() == Gesture::Pan) {
+        PanGesture *panGesture = static_cast<PanGesture *>(gesture);
+        pan(panGesture->x, panGesture->y, panGesture->deltaX, panGesture->deltaY);
+    }
 }
 
 void updateGestureType(Gesture::GestureType type)
@@ -124,4 +147,49 @@ void updateGestureType(Gesture::GestureType type)
     jmethodID methodSetGestureType = env->GetMethodID(clazz, "setGestureType", "(Ljava/lang/String;)V");
     if (methodSetGestureType)
         env->CallVoidMethod(mainActivity, methodSetGestureType, gestureTypeString);
+}
+
+void pinchUpdated(double scale, int centerX, int centerY)
+{
+    JNIEnv *env = getEnv();
+    jclass clazz = env->GetObjectClass(mainActivity);
+    jmethodID method = env->GetMethodID(clazz, "updatePinch", "(DII)V");
+    if (method)
+        env->CallVoidMethod(mainActivity, method, scale, centerX, centerY);
+}
+
+void pinchStarted()
+{
+    JNIEnv *env = getEnv();
+    jclass clazz = env->GetObjectClass(mainActivity);
+    jmethodID method = env->GetMethodID(clazz, "startPinch", "()V");
+    if (method)
+        env->CallVoidMethod(mainActivity, method);
+}
+
+void pinchFinished()
+{
+    JNIEnv *env = getEnv();
+    jclass clazz = env->GetObjectClass(mainActivity);
+    jmethodID method = env->GetMethodID(clazz, "stopPinch", "()V");
+    if (method)
+        env->CallVoidMethod(mainActivity, method);
+}
+
+void tap(int x, int y, int vertical, int horizontal)
+{
+    JNIEnv *env = getEnv();
+    jclass clazz = env->GetObjectClass(mainActivity);
+    jmethodID method = env->GetMethodID(clazz, "tap", "(IIII)V");
+    if (method)
+        env->CallVoidMethod(mainActivity, method, x, y, vertical, horizontal);
+}
+
+void pan(int x, int y, int deltaX, int deltaY)
+{
+    JNIEnv *env = getEnv();
+    jclass clazz = env->GetObjectClass(mainActivity);
+    jmethodID method = env->GetMethodID(clazz, "pan", "(IIII)V");
+    if (method)
+        env->CallVoidMethod(mainActivity, method, x, y, deltaX, deltaY);
 }
