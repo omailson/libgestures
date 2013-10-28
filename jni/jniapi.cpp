@@ -61,6 +61,7 @@ JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeOnStart(J
 {
     LOG_INFO("nativeOnStart");
     gestureManager = new GestureManager();
+    gestureManager->setMoveThreshold(40);
     mainActivity = jenv->NewGlobalRef(activity);
 }
 
