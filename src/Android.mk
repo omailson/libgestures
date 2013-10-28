@@ -12,7 +12,8 @@ LOCAL_SRC_FILES := \
     gestures/pan.cpp \
     gestures/tap.cpp \
     gestures/pinch.cpp \
-    events/ainputeventhelper.cpp
+    events/ainputeventhelper.cpp \
+    events/gestureeventfilter.cpp
 
 LOCAL_SHARED_LIBRARIES := \
     libstlport

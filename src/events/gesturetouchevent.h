@@ -32,10 +32,15 @@ struct GestureTouchEvent
         TouchCancel
     };
 
+    enum {
+        GESTURE_EVENT_TINY_MOVE = 1
+    };
+
     EventType type;
     double timestamp;
     unsigned int numTouchPoints;
     GestureTouchPoint touchPoints[GESTURE_MAXIMUM_TOUCH_POINTS_PER_TOUCH_EVENT];
+    int flags;
 };
 
 #endif // GESTURETOUCHEVENT_H

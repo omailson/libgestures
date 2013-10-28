@@ -4,6 +4,8 @@
 #include <list>
 #include <map>
 
+class GestureMoveEventFilter;
+
 class GestureManagerPrivate {
 public:
     GestureManagerPrivate(GestureManager* parent);
@@ -17,6 +19,7 @@ public:
     std::list<GestureRecognizer *> m_recognizers;
     std::map<GestureRecognizer *, Gesture *> m_gestures;
     int m_availableGestures;
+    GestureMoveEventFilter *m_moveEventFilter;
 
     // Known recognizers
     GestureRecognizer *m_panRecognizer;

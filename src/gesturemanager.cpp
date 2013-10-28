@@ -1,6 +1,7 @@
 
 #include "gesturemanager.h"
 #include "gesturemanager_p.h"
+#include "events/gestureeventfilter_p.h"
 #include "gestures/pan.h"
 #include "gestures/tap.h"
 #include "gestures/pinch.h"
@@ -9,6 +10,7 @@
 GestureManagerPrivate::GestureManagerPrivate(GestureManager *parent)
     : m_parent(parent)
     , m_availableGestures(0)
+    , m_moveEventFilter(new GestureMoveEventFilter)
     , m_panRecognizer(0)
     , m_tapRecognizer(0)
     , m_pinchRecognizer(0)
@@ -20,6 +22,7 @@ GestureManagerPrivate::~GestureManagerPrivate()
     delete m_panRecognizer;
     delete m_tapRecognizer;
     delete m_pinchRecognizer;
+    delete m_moveEventFilter;
 }
 
 void GestureManagerPrivate::createGestures()
@@ -66,6 +69,8 @@ Gesture* GestureManager::sendEvent(GestureTouchEvent *event, unsigned int timest
 
     GestureRecognizer *candidateRecognizer = 0;
     GestureRecognizer::Action candidateAction = GestureRecognizer::Ignore;
+
+    d->m_moveEventFilter->filter(event);
 
     std::list<GestureRecognizer*>::iterator it = d->m_recognizers.begin();
     for (; it != d->m_recognizers.end(); ++it) {
@@ -119,4 +124,9 @@ void GestureManager::registerRecognizer(GestureRecognizer *recognizer)
 {
     d->m_recognizers.push_back(recognizer);
     d->m_gestures.insert(std::pair<GestureRecognizer *, Gesture *>(recognizer, NULL));
+}
+
+void GestureManager::setMoveThreshold(int moveThreshold)
+{
+    d->m_moveEventFilter->setMoveThreshold(moveThreshold);
 }

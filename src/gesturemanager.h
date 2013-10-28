@@ -14,6 +14,7 @@ public:
 
     Gesture* sendEvent(GestureTouchEvent *event, unsigned int timestamp);
     void registerRecognizer(GestureRecognizer *recognizer);
+    void setMoveThreshold(int moveThreshold);
 
 private:
     GestureManagerPrivate *d;
