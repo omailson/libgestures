@@ -8,6 +8,8 @@ LOCAL_SRC_FILES := $(call all-java-files-under, src)
 
 LOCAL_PACKAGE_NAME := GesturesSample
 
+LOCAL_PROGUARD_FLAG_FILES := proguard.flags
+
 # If this is an unbundled build (to install seprately) then include
 # the libraries in the APK, otherwise just put them in /system/lib and
 # leave them out of the APK

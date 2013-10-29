@@ -23,7 +23,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        // XXX: Avoid optimization
         setGestureType("No gesture");
         
         surfaceView = (SurfaceViewRect)findViewById(R.id.surfaceView);

@@ -1,0 +1,5 @@
+-keep public class org.indt.gesturessample.MainActivity {
+    public *;
+}
+
+-verbose
