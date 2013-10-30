@@ -98,7 +98,7 @@ public class SurfaceViewRect extends SurfaceView implements Callback {
                 }
 
                 try {
-                    sleep(16);
+                    sleep(5);
                 } catch (InterruptedException e) {
                     interrupt();
                 }
