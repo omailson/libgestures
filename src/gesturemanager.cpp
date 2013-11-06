@@ -98,9 +98,12 @@ Gesture* GestureManager::sendEvent(GestureTouchEvent *event, long long int times
         }
 
         switch(action) {
+            case GestureRecognizer::Ignore:
+            case GestureRecognizer::MayBeGesture:
+                break;
+
             case GestureRecognizer::TriggerGesture:
             case GestureRecognizer::FinishGesture:
-            // case GestureRecognizer::Ignore: // XXX
                 d->m_acceptedGestures[recognizer] = action;
                 break;
 

@@ -14,7 +14,7 @@ bool GestureRecognizer::useTimer() const
     return false;
 }
 
-GestureRecognizer::Action GestureRecognizer::recognize(Gesture *gesture, long long int timestamp)
+GestureRecognizer::Action GestureRecognizer::recognize(Gesture *, long long int)
 {
     return Ignore;
 }

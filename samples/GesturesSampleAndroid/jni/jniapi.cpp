@@ -66,7 +66,7 @@ JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeOnStart(J
     mainActivity = jenv->NewGlobalRef(activity);
 }
 
-JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeOnStop(JNIEnv* jenv, jobject)
+JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeOnStop(JNIEnv*, jobject)
 {
     LOG_INFO("nativeOnStop");
     delete gestureManager;
