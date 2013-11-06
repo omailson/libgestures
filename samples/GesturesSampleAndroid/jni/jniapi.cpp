@@ -156,6 +156,10 @@ void updateGestureType(Gesture::GestureType type)
             gestureTypeString = env->NewStringUTF("Pan");
             break;
 
+        case Gesture::DoubleTap:
+            gestureTypeString = env->NewStringUTF("Double tap");
+            break;
+
         default:
             gestureTypeString = env->NewStringUTF("Unknown gesture");
             break;
