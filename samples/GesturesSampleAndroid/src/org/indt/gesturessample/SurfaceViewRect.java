@@ -69,7 +69,7 @@ public class SurfaceViewRect extends SurfaceView implements Callback {
         center.y = y;
         paint.setColor(Color.rgb(30, generator.nextInt(255), 0));
     }
-    
+
     public void pan(int x, int y, int deltaX, int deltaY) {
         center.x = x;
         center.y = y;
