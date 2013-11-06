@@ -6,6 +6,7 @@ extern "C" {
     JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeOnStart(JNIEnv* jenv, jobject, jobject activity);
     JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeOnStop(JNIEnv* jenv, jobject);
     JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeOnTouch(JNIEnv*, jobject, jobject);
+    JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeUpdateTimestamp(JNIEnv*, jobject, jlong timestamp);
 };
 
 #endif // JNIAPI_H

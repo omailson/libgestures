@@ -1,5 +1,8 @@
 package org.indt.gesturessample;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,6 +16,7 @@ public class MainActivity extends Activity {
     public static native void nativeOnTouch(MotionEvent event);
     public static native void nativeOnStart(MainActivity activity);
     public static native void nativeOnStop();
+    public static native void nativeUpdateTimestamp(long timestamp);
 
     static {
         System.loadLibrary("gesturessample");
@@ -33,6 +37,24 @@ public class MainActivity extends Activity {
                 return true;
             }
         });
+
+        // Initialize timer
+        Timer timer = new Timer();
+        // Execute a method every 60ms
+        // This will be performed in another thread...
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                // ...however only the UI thread can change the views (and that's what we're doing after all)
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Call a native method to update the gesture manager timestamp
+                        MainActivity.nativeUpdateTimestamp(System.currentTimeMillis());
+                    }
+                });
+            }
+        }, 0, 60);
     }
 
     public void setGestureType(String gestureType) {

@@ -19,6 +19,7 @@ static jobject mainActivity;
 static GestureManager* gestureManager;
 static Gesture::GestureType currentGesture = Gesture::NoGesture;
 
+void updateGesture(Gesture *gesture);
 void updateGestureType(Gesture::GestureType type);
 void pinchUpdated(double, int, int);
 void pinchStarted();
@@ -89,13 +90,29 @@ JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeOnTouch(J
 
     GestureTouchEvent touchEvent = convertToGestureTouchEvent(ev);
     Gesture *gesture = gestureManager->sendEvent(&touchEvent, 0);
-
     if (!gesture)
         updateGestureType(Gesture::NoGesture);
     else
-        updateGestureType(gesture->gestureType());
+        updateGesture(gesture);
+}
 
-    if (gesture && gesture->gestureType() == Gesture::Pinch) {
+JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeUpdateTimestamp(JNIEnv*, jobject, jlong timestamp)
+{
+    if (!gestureManager)
+        return;
+
+    Gesture *gesture = gestureManager->sendEvent(0, timestamp);
+    updateGesture(gesture);
+}
+
+void updateGesture(Gesture *gesture)
+{
+    if (!gesture)
+        return;
+
+    updateGestureType(gesture->gestureType());
+
+    if (gesture->gestureType() == Gesture::Pinch) {
         PinchGesture *pinch = static_cast<PinchGesture *>(gesture);
         if (pinch->gestureState() == Gesture::GestureStarted)
             pinchStarted();
@@ -103,10 +120,10 @@ JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeOnTouch(J
             pinchUpdated(pinch->scale, pinch->centerX, pinch->centerY);
         else
             pinchFinished();
-    } else if (gesture && gesture->gestureType() == Gesture::Tap) {
+    } else if (gesture->gestureType() == Gesture::Tap) {
         TapGesture *tapGesture = static_cast<TapGesture *>(gesture);
         tap(tapGesture->x, tapGesture->y, tapGesture->verticalRadius, tapGesture->horizontalRadius);
-    } else if (gesture && gesture->gestureType() == Gesture::Pan) {
+    } else if (gesture->gestureType() == Gesture::Pan) {
         PanGesture *panGesture = static_cast<PanGesture *>(gesture);
         pan(panGesture->x, panGesture->y, panGesture->deltaX, panGesture->deltaY);
     }
