@@ -64,11 +64,11 @@ Gesture* GestureManager::sendEvent(GestureTouchEvent *event, long long int times
     if (!event && d->m_availableGestures == 0)
         return NULL;
 
+    if (!event && timestamp <= 0)
+        return NULL;
+
     if (d->m_availableGestures == 0)
         d->createGestures();
-
-    GestureRecognizer *candidateRecognizer = 0;
-    GestureRecognizer::Action candidateAction = GestureRecognizer::Ignore;
 
     d->m_moveEventFilter->filter(event);
 
@@ -80,9 +80,9 @@ Gesture* GestureManager::sendEvent(GestureTouchEvent *event, long long int times
             continue;
 
         GestureRecognizer::Action action;
-        if (recognizer->useTimer()) {
+        if (recognizer->useTimer() && timestamp > 0) {
             action = recognizer->recognize(gesture, timestamp);
-            if (action != GestureRecognizer::CancelGesture)
+            if (event && action != GestureRecognizer::CancelGesture)
                 action = recognizer->recognize(gesture, *event);
         } else {
             if (!event)
@@ -95,11 +95,15 @@ Gesture* GestureManager::sendEvent(GestureTouchEvent *event, long long int times
             case GestureRecognizer::TriggerGesture:
             case GestureRecognizer::FinishGesture:
             // case GestureRecognizer::Ignore: // XXX
-                candidateRecognizer = recognizer;
-                candidateAction = action;
+                d->m_acceptedGestures[recognizer] = action;
                 break;
 
             case GestureRecognizer::CancelGesture:
+                std::map<GestureRecognizer*, GestureRecognizer::Action>::iterator acceptedGesture;
+                acceptedGesture = d->m_acceptedGestures.find(recognizer);
+                if (acceptedGesture != d->m_acceptedGestures.end())
+                    d->m_acceptedGestures.erase(acceptedGesture);
+
                 d->m_gestures[recognizer] = NULL;
                 d->m_availableGestures--;
                 delete gesture;
@@ -107,11 +111,19 @@ Gesture* GestureManager::sendEvent(GestureTouchEvent *event, long long int times
         }
     }
 
-    if (candidateRecognizer && d->m_availableGestures == 1) {
-        Gesture *gesture = d->m_gestures[candidateRecognizer];
-        if (candidateAction == GestureRecognizer::FinishGesture) {
-            d->m_gestures[candidateRecognizer] = 0;
+    if (d->m_availableGestures == 1) {
+        std::map<GestureRecognizer*, GestureRecognizer::Action>::iterator acceptedGesture;
+        acceptedGesture = d->m_acceptedGestures.begin();
+        if (acceptedGesture == d->m_acceptedGestures.end())
+            return NULL;
+
+        GestureRecognizer *recognizer = acceptedGesture->first;
+        GestureRecognizer::Action action = acceptedGesture->second;
+        Gesture *gesture = d->m_gestures[recognizer];
+        if (action == GestureRecognizer::FinishGesture) {
+            d->m_gestures[recognizer] = 0;
             d->m_availableGestures--;
+            d->m_acceptedGestures.clear();
         }
 
         return gesture;

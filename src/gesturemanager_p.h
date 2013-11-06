@@ -4,6 +4,8 @@
 #include <list>
 #include <map>
 
+#include "gesturerecognizer.h"
+
 class GestureMoveEventFilter;
 
 class GestureManagerPrivate {
@@ -18,6 +20,7 @@ public:
 
     std::list<GestureRecognizer *> m_recognizers;
     std::map<GestureRecognizer *, Gesture *> m_gestures;
+    std::map<GestureRecognizer *, GestureRecognizer::Action> m_acceptedGestures;
     int m_availableGestures;
     GestureMoveEventFilter *m_moveEventFilter;
 
