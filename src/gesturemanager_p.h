@@ -28,6 +28,7 @@ public:
     GestureRecognizer *m_panRecognizer;
     GestureRecognizer *m_tapRecognizer;
     GestureRecognizer *m_pinchRecognizer;
+    GestureRecognizer *m_doubleTapRecognizer;
 };
 
 #endif // GESTUREMANAGER_P_H

@@ -5,6 +5,7 @@
 #include "gestures/pan.h"
 #include "gestures/tap.h"
 #include "gestures/pinch.h"
+#include "gestures/doubletap.h"
 #include "events/gesturetouchevent.h"
 
 GestureManagerPrivate::GestureManagerPrivate(GestureManager *parent)
@@ -14,6 +15,7 @@ GestureManagerPrivate::GestureManagerPrivate(GestureManager *parent)
     , m_panRecognizer(0)
     , m_tapRecognizer(0)
     , m_pinchRecognizer(0)
+    , m_doubleTapRecognizer(0)
 {
 }
 
@@ -22,6 +24,8 @@ GestureManagerPrivate::~GestureManagerPrivate()
     delete m_panRecognizer;
     delete m_tapRecognizer;
     delete m_pinchRecognizer;
+    delete m_doubleTapRecognizer;
+
     delete m_moveEventFilter;
 }
 
@@ -43,9 +47,11 @@ void GestureManagerPrivate::registerKnowRecognizers()
     m_panRecognizer = new PanRecognizer;
     m_tapRecognizer = new TapRecognizer;
     m_pinchRecognizer = new PinchRecognizer;
+    m_doubleTapRecognizer = new DoubleTapRecognizer;
     m_parent->registerRecognizer(m_panRecognizer);
     m_parent->registerRecognizer(m_tapRecognizer);
     m_parent->registerRecognizer(m_pinchRecognizer);
+    m_parent->registerRecognizer(m_doubleTapRecognizer);
 }
 
 GestureManager::GestureManager()

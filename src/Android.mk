@@ -12,6 +12,7 @@ LOCAL_SRC_FILES := \
     gestures/pan.cpp \
     gestures/tap.cpp \
     gestures/pinch.cpp \
+    gestures/doubletap.cpp \
     events/ainputeventhelper.cpp \
     events/gestureeventfilter.cpp
 

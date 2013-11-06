@@ -8,7 +8,8 @@ public:
         NoGesture,
         Tap,
         Pan,
-        Pinch
+        Pinch,
+        DoubleTap
     };
 
     enum GestureState {
