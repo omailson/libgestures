@@ -12,7 +12,7 @@ public:
     GestureManager();
     ~GestureManager();
 
-    Gesture* sendEvent(GestureTouchEvent *event, unsigned int timestamp);
+    Gesture* sendEvent(GestureTouchEvent *event, long long int timestamp);
     void registerRecognizer(GestureRecognizer *recognizer);
     void setMoveThreshold(int moveThreshold);
 

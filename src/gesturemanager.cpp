@@ -59,7 +59,7 @@ GestureManager::~GestureManager()
     delete d;
 }
 
-Gesture* GestureManager::sendEvent(GestureTouchEvent *event, unsigned int timestamp)
+Gesture* GestureManager::sendEvent(GestureTouchEvent *event, long long int timestamp)
 {
     if (!event && d->m_availableGestures == 0)
         return NULL;

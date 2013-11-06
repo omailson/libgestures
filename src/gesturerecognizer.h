@@ -21,7 +21,7 @@ public:
     virtual ~GestureRecognizer();
 
     virtual bool useTimer() const;
-    virtual Action recognize(Gesture *gesture, unsigned int timestamp);
+    virtual Action recognize(Gesture *gesture, long long int timestamp);
     virtual Action recognize(Gesture *gesture, const GestureTouchEvent &event) = 0;
     virtual Gesture *create() = 0;
 };
