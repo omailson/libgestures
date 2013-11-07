@@ -23,12 +23,6 @@ public:
     std::map<GestureRecognizer *, GestureRecognizer::Action> m_acceptedGestures;
     int m_availableGestures;
     GestureMoveEventFilter *m_moveEventFilter;
-
-    // Known recognizers
-    GestureRecognizer *m_panRecognizer;
-    GestureRecognizer *m_tapRecognizer;
-    GestureRecognizer *m_pinchRecognizer;
-    GestureRecognizer *m_doubleTapRecognizer;
 };
 
 #endif // GESTUREMANAGER_P_H

@@ -12,19 +12,14 @@ GestureManagerPrivate::GestureManagerPrivate(GestureManager *parent)
     : m_parent(parent)
     , m_availableGestures(0)
     , m_moveEventFilter(new GestureMoveEventFilter)
-    , m_panRecognizer(0)
-    , m_tapRecognizer(0)
-    , m_pinchRecognizer(0)
-    , m_doubleTapRecognizer(0)
 {
 }
 
 GestureManagerPrivate::~GestureManagerPrivate()
 {
-    delete m_panRecognizer;
-    delete m_tapRecognizer;
-    delete m_pinchRecognizer;
-    delete m_doubleTapRecognizer;
+    std::list<GestureRecognizer*>::iterator it = m_recognizers.begin();
+    for (; it != m_recognizers.end(); ++it)
+        delete *it;
 
     delete m_moveEventFilter;
 }
@@ -44,14 +39,16 @@ void GestureManagerPrivate::createGestures()
 
 void GestureManagerPrivate::registerKnowRecognizers()
 {
-    m_panRecognizer = new PanRecognizer;
-    m_tapRecognizer = new TapRecognizer;
-    m_pinchRecognizer = new PinchRecognizer;
-    m_doubleTapRecognizer = new DoubleTapRecognizer;
-    m_parent->registerRecognizer(m_panRecognizer);
-    m_parent->registerRecognizer(m_tapRecognizer);
-    m_parent->registerRecognizer(m_pinchRecognizer);
-    m_parent->registerRecognizer(m_doubleTapRecognizer);
+    GestureRecognizer *recognizers[] = {
+        new PanRecognizer,
+        new TapRecognizer,
+        new PinchRecognizer,
+        new DoubleTapRecognizer,
+        0
+    };
+
+    for (int i = 0; recognizers[i]; ++i)
+        m_parent->registerRecognizer(recognizers[i]);
 }
 
 GestureManager::GestureManager()
