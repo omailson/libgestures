@@ -12,6 +12,7 @@ GestureManagerPrivate::GestureManagerPrivate(GestureManager *parent)
     : m_parent(parent)
     , m_availableGestures(0)
     , m_moveEventFilter(new GestureMoveEventFilter)
+    , m_triggeredGestureRecognizer(0)
 {
 }
 
@@ -51,6 +52,33 @@ void GestureManagerPrivate::registerKnowRecognizers()
         m_parent->registerRecognizer(recognizers[i]);
 }
 
+Gesture* GestureManagerPrivate::handleTriggeredGesture(GestureTouchEvent *event, long long int timestamp)
+{
+    m_moveEventFilter->filter(event);
+
+    GestureRecognizer *recognizer = m_triggeredGestureRecognizer;
+    GestureRecognizer::Action action;
+    Gesture *gesture = m_gestures[recognizer];
+    if (recognizer->useTimer() && timestamp > 0) {
+        action = recognizer->recognize(gesture, timestamp);
+        if (event && action != GestureRecognizer::CancelGesture)
+            action = recognizer->recognize(gesture, *event);
+    } else {
+        if (!event)
+            return NULL;
+
+        action = recognizer->recognize(gesture, *event);
+    }
+
+    if (action == GestureRecognizer::FinishGesture
+            || action == GestureRecognizer::CancelGesture) {
+        m_gestures[recognizer] = 0;
+        m_triggeredGestureRecognizer = 0;
+    }
+
+    return gesture;
+}
+
 GestureManager::GestureManager()
     : d(new GestureManagerPrivate(this))
 {
@@ -64,6 +92,9 @@ GestureManager::~GestureManager()
 
 Gesture* GestureManager::sendEvent(GestureTouchEvent *event, long long int timestamp)
 {
+    if (d->m_triggeredGestureRecognizer)
+        return d->handleTriggeredGesture(event, timestamp);
+
     if (!event && d->m_availableGestures == 0)
         return NULL;
 
@@ -100,6 +131,23 @@ Gesture* GestureManager::sendEvent(GestureTouchEvent *event, long long int times
                 break;
 
             case GestureRecognizer::TriggerGesture:
+            {
+                std::map<GestureRecognizer*, Gesture*>::iterator it = d->m_gestures.begin();
+                for (; it != d->m_gestures.end(); ++it) {
+                    if (it->second != gesture) {
+                        delete it->second;
+                        d->m_gestures[it->first] = 0;
+                    }
+                }
+                d->m_acceptedGestures.clear();
+                d->m_availableGestures = 0;
+                d->m_triggeredGestureRecognizer = 0;
+
+                d->m_triggeredGestureRecognizer = recognizer;
+                return gesture;
+                break;
+            }
+
             case GestureRecognizer::FinishGesture:
                 d->m_acceptedGestures[recognizer] = action;
                 break;

@@ -15,6 +15,7 @@ public:
 
     void registerKnowRecognizers();
     void createGestures();
+    Gesture *handleTriggeredGesture(GestureTouchEvent *event, long long int timestamp);
 
     GestureManager *m_parent;
 
@@ -23,6 +24,7 @@ public:
     std::map<GestureRecognizer *, GestureRecognizer::Action> m_acceptedGestures;
     int m_availableGestures;
     GestureMoveEventFilter *m_moveEventFilter;
+    GestureRecognizer *m_triggeredGestureRecognizer;
 };
 
 #endif // GESTUREMANAGER_P_H
