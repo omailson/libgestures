@@ -160,6 +160,10 @@ void updateGestureType(Gesture::GestureType type)
             gestureTypeString = env->NewStringUTF("Double tap");
             break;
 
+        case Gesture::LongPress:
+            gestureTypeString = env->NewStringUTF("Long press");
+            break;
+
         default:
             gestureTypeString = env->NewStringUTF("Unknown gesture");
             break;
