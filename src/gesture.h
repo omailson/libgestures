@@ -10,6 +10,7 @@ public:
         Pan,
         Pinch,
         DoubleTap,
+        LongPress,
         CustomGesture = 1000
     };
 

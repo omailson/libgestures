@@ -6,6 +6,7 @@
 #include "gestures/tap.h"
 #include "gestures/pinch.h"
 #include "gestures/doubletap.h"
+#include "gestures/longpress.h"
 #include "events/gesturetouchevent.h"
 
 GestureManagerPrivate::GestureManagerPrivate(GestureManager *parent)
@@ -45,6 +46,7 @@ void GestureManagerPrivate::registerKnowRecognizers()
         new TapRecognizer,
         new PinchRecognizer,
         new DoubleTapRecognizer,
+        new LongPressRecognizer,
         0
     };
 
