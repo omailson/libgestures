@@ -9,14 +9,15 @@ public:
         Tap,
         Pan,
         Pinch,
-        DoubleTap
+        DoubleTap,
+        CustomGesture = 1000
     };
 
     enum GestureState {
         GestureStarted,
         GestureUpdated,
         GestureFinished,
-        GestureCanceled
+        GestureCancelled
     };
 
     Gesture();
