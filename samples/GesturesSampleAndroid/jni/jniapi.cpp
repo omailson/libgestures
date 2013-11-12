@@ -6,6 +6,8 @@
 #include <gestures/tap.h>
 #include <gestures/pinch.h>
 #include <gestures/pan.h>
+#include <gestures/doubletap.h>
+#include <gestures/longpress.h>
 #include <events/ainputeventhelper.h>
 
 #include "jniapi.h"
@@ -19,6 +21,7 @@ static jobject mainActivity;
 static GestureManager* gestureManager;
 static Gesture::GestureType currentGesture = Gesture::NoGesture;
 
+void createGestureManager();
 void updateGesture(Gesture *gesture);
 void updateGestureType(Gesture::GestureType type);
 void pinchUpdated(double, int, int);
@@ -61,8 +64,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*)
 JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeOnStart(JNIEnv* jenv, jobject, jobject activity)
 {
     LOG_INFO("nativeOnStart");
-    gestureManager = new GestureManager();
-    gestureManager->setMoveThreshold(40);
+    createGestureManager();
     mainActivity = jenv->NewGlobalRef(activity);
 }
 
@@ -103,6 +105,20 @@ JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeUpdateTim
 
     Gesture *gesture = gestureManager->sendEvent(0, timestamp);
     updateGesture(gesture);
+}
+
+void createGestureManager()
+{
+    gestureManager = new GestureManager();
+    gestureManager->setMoveThreshold(40);
+
+    // Create recognizers used in the app
+    // Gesture manager takes ownership of the recognizers
+    gestureManager->registerRecognizer(new TapRecognizer);
+    gestureManager->registerRecognizer(new PanRecognizer);
+    gestureManager->registerRecognizer(new PinchRecognizer);
+    gestureManager->registerRecognizer(new DoubleTapRecognizer);
+    gestureManager->registerRecognizer(new LongPressRecognizer);
 }
 
 void updateGesture(Gesture *gesture)
