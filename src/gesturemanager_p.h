@@ -13,7 +13,6 @@ public:
     GestureManagerPrivate(GestureManager* parent);
     ~GestureManagerPrivate();
 
-    void registerKnowRecognizers();
     void createGestures();
     Gesture *handleTriggeredGesture(GestureTouchEvent *event, long long int timestamp);
 

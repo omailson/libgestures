@@ -39,21 +39,6 @@ void GestureManagerPrivate::createGestures()
     }
 }
 
-void GestureManagerPrivate::registerKnowRecognizers()
-{
-    GestureRecognizer *recognizers[] = {
-        new PanRecognizer,
-        new TapRecognizer,
-        new PinchRecognizer,
-        new DoubleTapRecognizer,
-        new LongPressRecognizer,
-        0
-    };
-
-    for (int i = 0; recognizers[i]; ++i)
-        m_parent->registerRecognizer(recognizers[i]);
-}
-
 Gesture* GestureManagerPrivate::handleTriggeredGesture(GestureTouchEvent *event, long long int timestamp)
 {
     m_moveEventFilter->filter(event);
@@ -84,7 +69,6 @@ Gesture* GestureManagerPrivate::handleTriggeredGesture(GestureTouchEvent *event,
 GestureManager::GestureManager()
     : d(new GestureManagerPrivate(this))
 {
-    d->registerKnowRecognizers();
 }
 
 GestureManager::~GestureManager()
