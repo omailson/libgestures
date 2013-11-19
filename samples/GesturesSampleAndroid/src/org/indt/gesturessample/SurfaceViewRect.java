@@ -61,6 +61,7 @@ public class SurfaceViewRect extends SurfaceView implements Callback {
     public void stopPinch() {
         width = (int) (width * scale);
         height = (int) (height * scale);
+        scale = 1;
     }
 
     public void tap(int x, int y, int verticalRadius, int horizontalRadius) {
