@@ -24,6 +24,7 @@ private:
     friend class PinchRecognizer;
 };
 
+
 class PinchRecognizer : public GestureRecognizer {
 public:
     PinchRecognizer();
