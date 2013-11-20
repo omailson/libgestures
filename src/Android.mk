@@ -15,7 +15,8 @@ LOCAL_SRC_FILES := \
     gestures/doubletap.cpp \
     gestures/longpress.cpp \
     events/ainputeventhelper.cpp \
-    events/gestureeventfilter.cpp
+    events/gestureeventfilter.cpp \
+    utils/vector2d.cpp
 
 LOCAL_SHARED_LIBRARIES := \
     libstlport

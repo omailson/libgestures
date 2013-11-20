@@ -8,6 +8,7 @@ set(gestures_SOURCES
   gestures/tap.cpp
   gestures/pinch.cpp
   events/ainputeventhelper.cpp
+  utils/vector2d.cpp
 )
 
 link_directories(/opt/android-ndk/platforms/android-18/arch-arm/usr/lib/)
