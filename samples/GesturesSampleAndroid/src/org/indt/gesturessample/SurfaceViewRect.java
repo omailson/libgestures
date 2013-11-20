@@ -19,12 +19,20 @@ public class SurfaceViewRect extends SurfaceView implements Callback {
     private int width = 100;
     private int height = 100;
     private PointF center;
+    private float [] swipeArea;
+    private OnSizeChangedListerner onSizeChangedListener;
 
     private SurfaceHolder holder;
     private TestThread renderThread;
 
+    public interface OnSizeChangedListerner {
+        public void onSizeChanged(int w, int h, int oldw, int oldh);
+    }
+
     public SurfaceViewRect(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        this.swipeArea = new float[4];
 
         holder = getHolder();
         holder.addCallback(this);
@@ -47,6 +55,18 @@ public class SurfaceViewRect extends SurfaceView implements Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+
+        if (onSizeChangedListener != null)
+            onSizeChangedListener.onSizeChanged(w, h, oldw, oldh);
+    }
+
+    public void setOnSizeChangedListener(OnSizeChangedListerner listener) {
+        this.onSizeChangedListener = listener;
     }
 
     public void startPinch() {
@@ -76,6 +96,13 @@ public class SurfaceViewRect extends SurfaceView implements Callback {
         center.y = y;
     }
 
+    public void setSwipeArea(float left, float top, float right, float bottom) {
+        this.swipeArea[0] = left;
+        this.swipeArea[1] = top;
+        this.swipeArea[2] = right;
+        this.swipeArea[3] = bottom;
+    }
+
     class TestThread extends Thread {
         @Override
         public void run() {
@@ -90,6 +117,17 @@ public class SurfaceViewRect extends SurfaceView implements Callback {
                         float right = (float) (center.x + width * scale * 0.5);
                         float bottom = (float) (center.y + height * scale * 0.5);
                         canvas.drawRect(left, top, right, bottom, paint);
+
+                        int color = paint.getColor();
+                        paint.setColor(Color.BLACK);
+                        float [] lines = {
+                            swipeArea[0], swipeArea[1], swipeArea[2], swipeArea[1],
+                            swipeArea[2], swipeArea[1], swipeArea[2], swipeArea[3],
+                            swipeArea[2], swipeArea[3], swipeArea[0], swipeArea[3],
+                            swipeArea[0], swipeArea[3], swipeArea[0], swipeArea[1]
+                        };
+                        canvas.drawLines(lines, paint);
+                        paint.setColor(color);
                     }
                 } catch (NullPointerException e) {
                     interrupt();

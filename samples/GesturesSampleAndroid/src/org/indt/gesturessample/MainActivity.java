@@ -17,6 +17,7 @@ public class MainActivity extends Activity {
     public static native void nativeOnStart(MainActivity activity);
     public static native void nativeOnStop();
     public static native void nativeUpdateTimestamp(long timestamp);
+    public static native void nativeSetSwipeArea(int left, int top, int right, int bottom);
 
     static {
         System.loadLibrary("gesturessample");
@@ -35,6 +36,13 @@ public class MainActivity extends Activity {
             public boolean onTouch(View v, MotionEvent event) {
                 nativeOnTouch(event);
                 return true;
+            }
+        });
+        surfaceView.setOnSizeChangedListener(new SurfaceViewRect.OnSizeChangedListerner() {
+            @Override
+            public void onSizeChanged(int w, int h, int oldw, int oldh) {
+                surfaceView.setSwipeArea(150, 150, w - 150, h - 150);
+                nativeSetSwipeArea(150, 150, w - 150, h - 150);
             }
         });
 
