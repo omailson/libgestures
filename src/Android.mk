@@ -14,6 +14,7 @@ LOCAL_SRC_FILES := \
     gestures/pinch.cpp \
     gestures/doubletap.cpp \
     gestures/longpress.cpp \
+    gestures/swipe.cpp \
     events/ainputeventhelper.cpp \
     events/gestureeventfilter.cpp
 
