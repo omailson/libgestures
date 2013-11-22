@@ -1,5 +1,3 @@
-#include <stdlib.h>
-#include <gesture.h>
 #include "pan.h"
 #include "pan_p.h"
 
@@ -31,15 +29,15 @@ PanRecognizer::PanRecognizer()
 {
 }
 
-GestureRecognizer::Action PanRecognizer::recognize(Gesture *gesture, const GestureTouchEvent &ev)
+GestureRecognizer::Action PanRecognizer::recognize(Gesture *baseGesture, const GestureTouchEvent &ev)
 {
-    PanGesture *panGesture = static_cast<PanGesture*>(gesture);
-    switch (panGesture->d->state) {
+    PanGesture *gesture = static_cast<PanGesture*>(baseGesture);
+    switch (gesture->d->state) {
         case PanGesturePrivate::NoGesture:
             if (ev.type == GestureTouchEvent::TouchStart) {
-                panGesture->d->state = PanGesturePrivate::WaitingMove;
-                panGesture->x = ev.touchPoints[0].x;
-                panGesture->y = ev.touchPoints[0].y;
+                gesture->d->state = PanGesturePrivate::WaitingMove;
+                gesture->x = ev.touchPoints[0].x;
+                gesture->y = ev.touchPoints[0].y;
                 return MayBeGesture;
             }
             break;
@@ -49,13 +47,13 @@ GestureRecognizer::Action PanRecognizer::recognize(Gesture *gesture, const Gestu
                 if (ev.flags & GestureTouchEvent::GESTURE_EVENT_TINY_MOVE)
                     return Ignore;
 
-                panGesture->d->state = PanGesturePrivate::Moving;
-                panGesture->setGestureState(Gesture::GestureStarted);
+                gesture->d->state = PanGesturePrivate::Moving;
+                gesture->setGestureState(Gesture::GestureStarted);
 
-                panGesture->deltaX = ev.touchPoints[0].x - panGesture->x;
-                panGesture->deltaY = ev.touchPoints[0].y - panGesture->y;
-                panGesture->x = ev.touchPoints[0].x;
-                panGesture->y = ev.touchPoints[0].y;
+                gesture->deltaX = ev.touchPoints[0].x - gesture->x;
+                gesture->deltaY = ev.touchPoints[0].y - gesture->y;
+                gesture->x = ev.touchPoints[0].x;
+                gesture->y = ev.touchPoints[0].y;
 
                 return TriggerGesture;
             }
@@ -63,19 +61,19 @@ GestureRecognizer::Action PanRecognizer::recognize(Gesture *gesture, const Gestu
 
         case PanGesturePrivate::Moving:
             if (ev.type == GestureTouchEvent::TouchMove) {
-                panGesture->setGestureState(Gesture::GestureUpdated);
-                panGesture->deltaX = ev.touchPoints[0].x - panGesture->x;
-                panGesture->deltaY = ev.touchPoints[0].y - panGesture->y;
-                panGesture->x = ev.touchPoints[0].x;
-                panGesture->y = ev.touchPoints[0].y;
+                gesture->setGestureState(Gesture::GestureUpdated);
+                gesture->deltaX = ev.touchPoints[0].x - gesture->x;
+                gesture->deltaY = ev.touchPoints[0].y - gesture->y;
+                gesture->x = ev.touchPoints[0].x;
+                gesture->y = ev.touchPoints[0].y;
 
                 return TriggerGesture;
             } else if (ev.type == GestureTouchEvent::TouchEnd) {
-                panGesture->setGestureState(Gesture::GestureFinished);
-                panGesture->deltaX = ev.touchPoints[0].x - panGesture->x;
-                panGesture->deltaY = ev.touchPoints[0].y - panGesture->y;
-                panGesture->x = ev.touchPoints[0].x;
-                panGesture->y = ev.touchPoints[0].y;
+                gesture->setGestureState(Gesture::GestureFinished);
+                gesture->deltaX = ev.touchPoints[0].x - gesture->x;
+                gesture->deltaY = ev.touchPoints[0].y - gesture->y;
+                gesture->x = ev.touchPoints[0].x;
+                gesture->y = ev.touchPoints[0].y;
 
                 return FinishGesture;
             }
