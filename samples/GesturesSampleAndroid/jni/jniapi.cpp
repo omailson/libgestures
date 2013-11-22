@@ -5,6 +5,7 @@
 #include <gesturemanager.h>
 #include <gestures/tap.h>
 #include <gestures/pinch.h>
+#include <gestures/pinch3f.h>
 #include <gestures/pan.h>
 #include <gestures/doubletap.h>
 #include <gestures/longpress.h>
@@ -127,6 +128,7 @@ void createGestureManager()
     panRecognizer = new PanRecognizer;
     gestureManager->registerRecognizer(panRecognizer);
     gestureManager->registerRecognizer(new PinchRecognizer);
+    gestureManager->registerRecognizer(new Pinch3fRecognizer);
     gestureManager->registerRecognizer(new DoubleTapRecognizer);
     gestureManager->registerRecognizer(new LongPressRecognizer);
 }
@@ -140,6 +142,14 @@ void updateGesture(Gesture *gesture)
 
     if (gesture->gestureType() == Gesture::Pinch) {
         PinchGesture *pinch = static_cast<PinchGesture *>(gesture);
+        if (pinch->gestureState() == Gesture::GestureStarted)
+            pinchStarted();
+        else if (pinch->gestureState() == Gesture::GestureUpdated)
+            pinchUpdated(pinch->scale, pinch->centerX, pinch->centerY);
+        else
+            pinchFinished();
+    } else if (gesture->gestureType() == Gesture::Pinch3f) {
+        Pinch3fGesture *pinch = static_cast<Pinch3fGesture *>(gesture);
         if (pinch->gestureState() == Gesture::GestureStarted)
             pinchStarted();
         else if (pinch->gestureState() == Gesture::GestureUpdated)
@@ -193,6 +203,10 @@ void updateGestureType(Gesture::GestureType type)
 
         case Gesture::Pinch:
             gestureTypeString = env->NewStringUTF("Pinch");
+            break;
+
+        case Gesture::Pinch3f:
+            gestureTypeString = env->NewStringUTF("Pinch3f");
             break;
 
         case Gesture::Pan:

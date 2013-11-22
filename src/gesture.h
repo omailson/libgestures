@@ -9,6 +9,7 @@ public:
         Tap,
         Pan,
         Pinch,
+        Pinch3f,
         DoubleTap,
         LongPress,
         CustomGesture = 1000

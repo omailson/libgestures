@@ -7,6 +7,7 @@ set(gestures_SOURCES
   gestures/pan.cpp
   gestures/tap.cpp
   gestures/pinch.cpp
+  gestures/pinch3f.cpp
   events/ainputeventhelper.cpp
   utils/vector2d.cpp
 )
