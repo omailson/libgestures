@@ -11,6 +11,18 @@ public:
 
     PanGesturePrivate();
     PanState state;
+    int startX;
+    int startY;
+};
+
+class PanRecognizerPrivate {
+public:
+    PanRecognizerPrivate();
+
+    int x;
+    int y;
+    int width;
+    int height;
 };
 
 #endif // PAN_GESTURE_P_H
