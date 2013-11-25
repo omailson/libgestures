@@ -8,7 +8,6 @@
 #include <gestures/pan.h>
 #include <gestures/doubletap.h>
 #include <gestures/longpress.h>
-#include <gestures/swipe.h>
 #include <events/ainputeventhelper.h>
 
 #include "jniapi.h"
@@ -20,7 +19,7 @@ static JavaVM *jvm = 0;
 static jclass motionEventClass;
 static jobject mainActivity;
 static GestureManager* gestureManager;
-static SwipeRecognizer *swipeRecognizer = 0;
+static PanRecognizer *panRecognizer = 0;
 static Gesture::GestureType currentGesture = Gesture::NoGesture;
 
 void createGestureManager();
@@ -111,8 +110,8 @@ JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeUpdateTim
 
 JNIEXPORT void JNICALL Java_org_indt_gesturessample_MainActivity_nativeSetSwipeArea(JNIEnv*, jobject, jint left, jint top, jint right, jint bottom)
 {
-    if (swipeRecognizer)
-        swipeRecognizer->setBounds(left, top, right - left, bottom - top);
+    if (panRecognizer)
+        panRecognizer->setBounds(left, top, right - left, bottom - top);
     else
         LOG_INFO("NO SWIPEREC :(");
 }
@@ -125,11 +124,8 @@ void createGestureManager()
     // Create recognizers used in the app
     // Gesture manager takes ownership of the recognizers
     gestureManager->registerRecognizer(new TapRecognizer);
-
-    swipeRecognizer = new SwipeRecognizer;
-    gestureManager->registerRecognizer(swipeRecognizer);
-
-    gestureManager->registerRecognizer(new PanRecognizer);
+    panRecognizer = new PanRecognizer;
+    gestureManager->registerRecognizer(panRecognizer);
     gestureManager->registerRecognizer(new PinchRecognizer);
     gestureManager->registerRecognizer(new DoubleTapRecognizer);
     gestureManager->registerRecognizer(new LongPressRecognizer);
@@ -155,19 +151,24 @@ void updateGesture(Gesture *gesture)
         tap(tapGesture->x, tapGesture->y, tapGesture->verticalRadius, tapGesture->horizontalRadius);
     } else if (gesture->gestureType() == Gesture::Pan) {
         PanGesture *panGesture = static_cast<PanGesture *>(gesture);
-        pan(panGesture->x, panGesture->y, panGesture->deltaX, panGesture->deltaY);
-    } else if (gesture->gestureType() == Gesture::Swipe) {
-        SwipeGesture *swipeGesture = static_cast<SwipeGesture*>(gesture);
-        if (swipeGesture->side == SwipeGesture::Left)
-            LOG_INFO("Swipe Left");
-        else if (swipeGesture->side == SwipeGesture::Top)
-            LOG_INFO("Swipe Top");
-        else if (swipeGesture->side == SwipeGesture::Right)
-            LOG_INFO("Swipe Right");
-        else if (swipeGesture->side == SwipeGesture::Bottom)
-            LOG_INFO("Swipe Bottom");
+
+        if (panGesture->side & (PanGesture::Left | PanGesture::Right))
+            pan(panGesture->x, 0, panGesture->deltaX, 0);
+        else if (panGesture->side & (PanGesture::Top | PanGesture::Bottom))
+            pan(0, panGesture->y, 0, panGesture->deltaY);
         else
-            LOG_INFO("Swipe ERROR!");
+            pan(panGesture->x, panGesture->y, panGesture->deltaX, panGesture->deltaY);
+
+        if (panGesture->side == PanGesture::Left)
+            LOG_INFO("Swipe Left");
+        else if (panGesture->side == PanGesture::Top)
+            LOG_INFO("Swipe Top");
+        else if (panGesture->side == PanGesture::Right)
+            LOG_INFO("Swipe Right");
+        else if (panGesture->side == PanGesture::Bottom)
+            LOG_INFO("Swipe Bottom");
+        else if (panGesture->side != PanGesture::NoSide)
+            LOG_INFO("Swipe %d", panGesture->side);
     }
 }
 
@@ -204,10 +205,6 @@ void updateGestureType(Gesture::GestureType type)
 
         case Gesture::LongPress:
             gestureTypeString = env->NewStringUTF("Long press");
-            break;
-
-        case Gesture::Swipe:
-            gestureTypeString = env->NewStringUTF("Swipe");
             break;
 
         default:
