@@ -11,7 +11,6 @@ public:
         Pinch,
         DoubleTap,
         LongPress,
-        Swipe,
         CustomGesture = 1000
     };
 
