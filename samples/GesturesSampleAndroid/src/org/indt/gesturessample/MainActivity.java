@@ -20,6 +20,7 @@ public class MainActivity extends Activity {
     public static native void nativeSetSwipeArea(int left, int top, int right, int bottom);
 
     static {
+        System.loadLibrary("gestures");
         System.loadLibrary("gesturessample");
     }
 
