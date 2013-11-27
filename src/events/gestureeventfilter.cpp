@@ -68,3 +68,42 @@ void GestureMoveEventFilter::updateHistory(GestureTouchEvent *ev)
             m_touchPoints[i] = ev->touchPoints[i];
     }
 }
+
+PinchEventFilter::PinchEventFilter()
+{
+}
+
+void PinchEventFilter::filter(GestureTouchEvent *ev)
+{
+    if (!ev)
+        return;
+
+    if (ev->numTouchPoints != 2) {
+        reset();
+        return;
+    }
+
+    Vector2D p0(ev->touchPoints[0].x, ev->touchPoints[0].y);
+    Vector2D p1(ev->touchPoints[1].x, ev->touchPoints[1].y);
+
+    if (m_p0.isNull() && m_p1.isNull()) {
+        m_p0 = p0;
+        m_p1 = p1;
+    }
+
+    Vector2D diffA = (m_p0 - p0);
+    Vector2D diffB = (m_p1 - p1);
+
+    if (diffA.lengthSquared() > MIN_MOVEMENT_LENGTH_SQUARED
+           && diffB.lengthSquared() > MIN_MOVEMENT_LENGTH_SQUARED)
+        ev->flags |= GestureTouchEvent::GESTURE_EVENT_CAN_RECOGNIZE_DIRECTION;
+    else
+        ev->flags &= ~GestureTouchEvent::GESTURE_EVENT_CAN_RECOGNIZE_DIRECTION;
+
+}
+
+void PinchEventFilter::reset()
+{
+    m_p0 = Vector2D();
+    m_p1 = Vector2D();
+}

@@ -33,7 +33,8 @@ struct GestureTouchEvent
     };
 
     enum {
-        GESTURE_EVENT_TINY_MOVE = 1
+        GESTURE_EVENT_TINY_MOVE = 1,
+        GESTURE_EVENT_CAN_RECOGNIZE_DIRECTION = 2
     };
 
     EventType type;
