@@ -73,15 +73,6 @@ bool PinchGesturePrivate::isPinch(const Vector2D &p0, const Vector2D &p1) const
     return d0 * d1 < 0 && fabs(d0) > MIN_COS && fabs(d1) > MIN_COS;
 }
 
-bool PinchGesturePrivate::canRecognizePinch(const Vector2D &p0, const Vector2D &p1) const
-{
-    Vector2D diffA = (m_originA - p0);
-    Vector2D diffB = (m_originB - p1);
-
-    return diffA.lengthSquared() > MIN_MOVEMENT_LENGTH_SQUARED
-           && diffB.lengthSquared() > MIN_MOVEMENT_LENGTH_SQUARED;
-}
-
 /*******************
  * PinchRecognizer *
  *******************/
@@ -137,7 +128,7 @@ GestureRecognizer::Action PinchRecognizer::recognize(Gesture *gesture, const Ges
                 return Action::FinishGesture;
             }
 
-            if (!pinchGesture->d->canRecognizePinch(p0, p1))
+            if (!(event.flags & GestureTouchEvent::GESTURE_EVENT_CAN_RECOGNIZE_DIRECTION))
                 return Action::MayBeGesture;
 
             if (!pinchGesture->d->isPinch(p0, p1))

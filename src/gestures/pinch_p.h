@@ -5,7 +5,6 @@
 #include "utils/vector2d.h"
 
 #define MIN_COS 0.45f
-#define MIN_MOVEMENT_LENGTH_SQUARED 70
 
 class PinchGesture;
 class PinchGesturePrivate {
