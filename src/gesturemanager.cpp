@@ -13,6 +13,7 @@ GestureManagerPrivate::GestureManagerPrivate(GestureManager *parent)
     : m_parent(parent)
     , m_availableGestures(0)
     , m_moveEventFilter(new GestureMoveEventFilter)
+    , m_pinchEventFilter(new PinchEventFilter)
     , m_triggeredGestureRecognizer(0)
 {
 }
@@ -28,6 +29,7 @@ GestureManagerPrivate::~GestureManagerPrivate()
 
     removeUnusedGestures();
     delete m_moveEventFilter;
+    delete m_pinchEventFilter;
 }
 
 void GestureManagerPrivate::createGestures()
@@ -54,7 +56,7 @@ void GestureManagerPrivate::removeUnusedGestures()
 
 Gesture* GestureManagerPrivate::handleTriggeredGesture(GestureTouchEvent *event, long long int timestamp)
 {
-    m_moveEventFilter->filter(event);
+    filterEvent(event);
 
     GestureRecognizer *recognizer = m_triggeredGestureRecognizer;
     GestureRecognizer::Action action;
@@ -78,6 +80,12 @@ Gesture* GestureManagerPrivate::handleTriggeredGesture(GestureTouchEvent *event,
     }
 
     return gesture;
+}
+
+void GestureManagerPrivate::filterEvent(GestureTouchEvent *event)
+{
+    m_moveEventFilter->filter(event);
+    m_pinchEventFilter->filter(event);
 }
 
 GestureManager::GestureManager()
@@ -106,7 +114,7 @@ Gesture* GestureManager::sendEvent(GestureTouchEvent *event, long long int times
     if (d->m_availableGestures == 0)
         d->createGestures();
 
-    d->m_moveEventFilter->filter(event);
+    d->filterEvent(event);
 
     std::list<GestureRecognizer*>::iterator it = d->m_recognizers.begin();
     for (; it != d->m_recognizers.end(); ++it) {

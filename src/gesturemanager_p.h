@@ -7,6 +7,7 @@
 #include "gesturerecognizer.h"
 
 class GestureMoveEventFilter;
+class PinchEventFilter;
 
 class GestureManagerPrivate {
 public:
@@ -16,6 +17,7 @@ public:
     void createGestures();
     void removeUnusedGestures();
     Gesture *handleTriggeredGesture(GestureTouchEvent *event, long long int timestamp);
+    void filterEvent(GestureTouchEvent *event);
 
     GestureManager *m_parent;
 
@@ -25,6 +27,7 @@ public:
     std::map<GestureRecognizer *, GestureRecognizer::Action> m_acceptedGestures;
     int m_availableGestures;
     GestureMoveEventFilter *m_moveEventFilter;
+    PinchEventFilter *m_pinchEventFilter;
     GestureRecognizer *m_triggeredGestureRecognizer;
 };
 
