@@ -4,6 +4,8 @@
 #include <math.h>
 
 Vector2D::Vector2D()
+    : m_x(0)
+    , m_y(0)
 {
 }
 
@@ -52,6 +54,11 @@ inline Vector2D Vector2D::operator/ (float scalar)
     return Vector2D(x() / scalar, y() / scalar);
 }
 
+bool Vector2D::operator== (const Vector2D &other)
+{
+    return fuzzyCompare(m_x, other.m_x) && fuzzyCompare(m_y, other.m_y);
+}
+
 void Vector2D::rotate90()
 {
     float x = m_x;
@@ -80,6 +87,10 @@ void Vector2D::normalize()
     m_y /= length;
 }
 
+bool Vector2D::isNull() const
+{
+    return fuzzyCompare(m_x + 1, 1) && fuzzyCompare(m_y + 1, 1);
+}
 
 float Vector2D::length() const
 {

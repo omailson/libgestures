@@ -23,9 +23,12 @@ public:
     Vector2D operator* (float scalar);
     Vector2D operator/ (float scalar);
 
+    bool operator== (const Vector2D &other);
+
     void rotate90();
     void rotate90Clockwise();
     void normalize();
+    bool isNull() const;
 
     float length() const;
     float lengthSquared() const;
