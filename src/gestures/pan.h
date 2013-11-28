@@ -28,6 +28,7 @@ public:
     int y;
     int deltaX;
     int deltaY;
+    int numTouchPoints;
 
 private:
     PanGesturePrivate *d;
@@ -47,6 +48,7 @@ public:
 private:
     PanRecognizerPrivate *d;
     PanGesture::SwipeSide computeSwipeSide(int x, int y) const;
+    void updateGesture(PanGesture *gesture, const GestureTouchEvent &event);
 };
 
 #endif // PAN_H

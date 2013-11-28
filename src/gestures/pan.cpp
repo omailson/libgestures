@@ -2,7 +2,7 @@
 #include "pan_p.h"
 
 #include "events/gesturetouchevent.h"
-
+#include "utils/vector2d.h"
 #include <math.h>
 
 #define PI 3.14159265
@@ -35,6 +35,8 @@ PanGesturePrivate::PanGesturePrivate()
 
 PanGesture::PanGesture()
     : Gesture()
+    , side(PanGesture::NoSide)
+    , numTouchPoints(0)
     , d(new PanGesturePrivate())
 {
 }
@@ -70,8 +72,13 @@ GestureRecognizer::Action PanRecognizer::recognize(Gesture *baseGesture, const G
         case PanGesturePrivate::NoGesture:
             if (ev.type == GestureTouchEvent::TouchStart) {
                 gesture->d->state = PanGesturePrivate::WaitingMove;
+
+                gesture->numTouchPoints = ev.numTouchPoints;
+                gesture->d->panTouchPoints[0].x = ev.touchPoints[0].x;
+                gesture->d->panTouchPoints[0].y = ev.touchPoints[0].y;
                 gesture->x = ev.touchPoints[0].x;
                 gesture->y = ev.touchPoints[0].y;
+
                 gesture->d->startX = ev.touchPoints[0].x;
                 gesture->d->startY = ev.touchPoints[0].y;
                 gesture->side = computeSwipeSide(gesture->d->startX, gesture->d->startY);
@@ -80,17 +87,48 @@ GestureRecognizer::Action PanRecognizer::recognize(Gesture *baseGesture, const G
             break;
 
         case PanGesturePrivate::WaitingMove:
-            if (ev.type == GestureTouchEvent::TouchMove) {
+            if (ev.type == GestureTouchEvent::TouchStart) {
+                gesture->numTouchPoints = ev.numTouchPoints;
+                int xsum = 0;
+                int ysum = 0;
+                for (unsigned int i = 0; i < ev.numTouchPoints; ++i) {
+                    gesture->d->panTouchPoints[i].x = ev.touchPoints[i].x;
+                    gesture->d->panTouchPoints[i].y = ev.touchPoints[i].y;
+                    xsum += ev.touchPoints[i].x;
+                    ysum += ev.touchPoints[i].y;
+                }
+                gesture->x = xsum / ev.numTouchPoints;
+                gesture->y = ysum / ev.numTouchPoints;
+
+                return MayBeGesture;
+            } else if (ev.type == GestureTouchEvent::TouchMove) {
                 if (ev.flags & GestureTouchEvent::GESTURE_EVENT_TINY_MOVE)
                     return Ignore;
+
+                // If there are 2 fingers, we need to make sure this is not a pinch
+                if (ev.numTouchPoints == 2) {
+                    if (!(ev.flags & GestureTouchEvent::GESTURE_EVENT_CAN_RECOGNIZE_DIRECTION))
+                        return Ignore;
+
+                    // Check if the 2 fingers are moving in the same direction
+                    Vector2D diffA(ev.touchPoints[0].x - gesture->d->panTouchPoints[0].x,
+                            ev.touchPoints[0].y - gesture->d->panTouchPoints[0].y);
+                    Vector2D diffB(ev.touchPoints[1].x - gesture->d->panTouchPoints[1].x,
+                            ev.touchPoints[1].y - gesture->d->panTouchPoints[1].y);
+
+                    // The amount of degrees those two vectors can be apart of
+                    // each other
+                    const float cos30 = 0.8660254037844387;
+                    float diffCos = Vector2D::cos(diffA, diffB);
+
+                    if (diffCos < cos30)
+                        return CancelGesture;
+                }
 
                 gesture->d->state = PanGesturePrivate::Moving;
                 gesture->setGestureState(Gesture::GestureStarted);
 
-                gesture->deltaX = ev.touchPoints[0].x - gesture->x;
-                gesture->deltaY = ev.touchPoints[0].y - gesture->y;
-                gesture->x = ev.touchPoints[0].x;
-                gesture->y = ev.touchPoints[0].y;
+                updateGesture(gesture, ev);
 
                 if (gesture->side != PanGesture::NoSide) {
                     // Check whether the finger is moving to the appropriate direction
@@ -118,18 +156,12 @@ GestureRecognizer::Action PanRecognizer::recognize(Gesture *baseGesture, const G
         case PanGesturePrivate::Moving:
             if (ev.type == GestureTouchEvent::TouchMove) {
                 gesture->setGestureState(Gesture::GestureUpdated);
-                gesture->deltaX = ev.touchPoints[0].x - gesture->x;
-                gesture->deltaY = ev.touchPoints[0].y - gesture->y;
-                gesture->x = ev.touchPoints[0].x;
-                gesture->y = ev.touchPoints[0].y;
+                updateGesture(gesture, ev);
 
                 return TriggerGesture;
             } else if (ev.type == GestureTouchEvent::TouchEnd) {
                 gesture->setGestureState(Gesture::GestureFinished);
-                gesture->deltaX = ev.touchPoints[0].x - gesture->x;
-                gesture->deltaY = ev.touchPoints[0].y - gesture->y;
-                gesture->x = ev.touchPoints[0].x;
-                gesture->y = ev.touchPoints[0].y;
+                updateGesture(gesture, ev);
 
                 return FinishGesture;
             }
@@ -156,6 +188,23 @@ PanGesture::SwipeSide PanRecognizer::computeSwipeSide(int x, int y) const
         side |= PanGesture::Bottom;
 
     return (PanGesture::SwipeSide) side;
+}
+
+void PanRecognizer::updateGesture(PanGesture *gesture, const GestureTouchEvent &ev)
+{
+    int xsum = 0;
+    int ysum = 0;
+    for (int i = 0; i < ev.numTouchPoints; ++i) {
+        xsum += ev.touchPoints[i].x;
+        ysum += ev.touchPoints[i].y;
+    }
+
+    float x = xsum / ev.numTouchPoints;
+    float y = ysum / ev.numTouchPoints;
+    gesture->deltaX = x - gesture->x;
+    gesture->deltaY = y - gesture->y;
+    gesture->x = x;
+    gesture->y = y;
 }
 
 void PanRecognizer::setBounds(int x, int y, int width, int height)

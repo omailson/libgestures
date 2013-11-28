@@ -1,6 +1,11 @@
 #ifndef PAN_GESTURE_P_H
 #define PAN_GESTURE_P_H
 
+struct PanTouchPoint {
+    int x;
+    int y;
+};
+
 class PanGesturePrivate {
 public:
     enum PanState {
@@ -13,6 +18,7 @@ public:
     PanState state;
     int startX;
     int startY;
+    PanTouchPoint panTouchPoints[10];
 };
 
 class PanRecognizerPrivate {
