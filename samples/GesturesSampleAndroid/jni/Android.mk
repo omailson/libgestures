@@ -11,7 +11,7 @@ LOCAL_SHARED_LIBRARIES := \
     libgestures
 
 LOCAL_C_INCLUDES := \
-    hydraapps/libgestures/src
+    hydralibs/libgestures/src
 
 
 include $(BUILD_SHARED_LIBRARY)
