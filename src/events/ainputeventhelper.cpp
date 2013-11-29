@@ -17,6 +17,8 @@ GestureTouchEvent convertToGestureTouchEvent(const AInputEvent *ev)
         touchPoint.id = AMotionEvent_getPointerId(ev, i);
         touchPoint.x = AMotionEvent_getX(ev, i);
         touchPoint.y = AMotionEvent_getY(ev, i);
+        touchPoint.verticalRadius = AMotionEvent_getTouchMajor(ev, i) / 2;
+        touchPoint.horizontalRadius = AMotionEvent_getTouchMinor(ev, i) / 2;
 
         touchEv.touchPoints[i] = touchPoint;
     }
