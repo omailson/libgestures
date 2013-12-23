@@ -9,6 +9,7 @@ struct GestureTouchEvent;
 
 class DoubleTapGesture : public Gesture
 {
+public:
     DoubleTapGesture();
     ~DoubleTapGesture();
 
