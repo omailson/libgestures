@@ -10,6 +10,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import android.util.Log;
+
 public class MainActivity extends Activity {
 
     private SurfaceViewRect surfaceView;
@@ -60,6 +62,7 @@ public class MainActivity extends Activity {
                     public void run() {
                         // Call a native method to update the gesture manager timestamp
                         MainActivity.nativeUpdateTimestamp(System.currentTimeMillis());
+						surfaceView.updateSquare(60);
                     }
                 });
             }
@@ -90,6 +93,10 @@ public class MainActivity extends Activity {
     public void pan(int x, int y, int deltaX, int deltaY) {
         surfaceView.pan(x, y, deltaX, deltaY);
     }
+
+	public void panFinished(int x, int y, float velocityX, float velocityY) {
+		surfaceView.panFinished(x, y, velocityX, velocityY);
+	}
 
     @Override
     protected void onStart() {

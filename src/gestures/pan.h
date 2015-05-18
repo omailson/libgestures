@@ -28,6 +28,8 @@ public:
     int y;
     int deltaX;
     int deltaY;
+    float velocityX;
+    float velocityY;
     int numTouchPoints;
 
 private:
@@ -40,6 +42,8 @@ public:
     PanRecognizer();
     ~PanRecognizer();
 
+    bool useTimer() const { return true; }
+    Action recognize(Gesture *gesture, long long int timestamp);
     Action recognize(Gesture *gesture, const GestureTouchEvent &event);
     Gesture *create();
 

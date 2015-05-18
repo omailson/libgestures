@@ -12,6 +12,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 
+import android.util.Log;
+
 public class SurfaceViewRect extends SurfaceView implements Callback {
     private Paint paint;
 
@@ -19,6 +21,7 @@ public class SurfaceViewRect extends SurfaceView implements Callback {
     private int width = 100;
     private int height = 100;
     private PointF center;
+	private PointF squareVelocity;
     private float [] swipeArea;
     private OnSizeChangedListerner onSizeChangedListener;
 
@@ -33,6 +36,8 @@ public class SurfaceViewRect extends SurfaceView implements Callback {
         super(context, attrs);
 
         this.swipeArea = new float[4];
+
+		squareVelocity = new PointF(0, 0);
 
         holder = getHolder();
         holder.addCallback(this);
@@ -95,6 +100,26 @@ public class SurfaceViewRect extends SurfaceView implements Callback {
         center.x = x;
         center.y = y;
     }
+
+	public void panFinished(int x, int y, float velocityX, float velocityY) {
+		Log.i("SurfaceView", ">>>>>> velocity: " + velocityX + " " + velocityY);
+		center.x = x;
+		center.y = y;
+		squareVelocity.x = velocityX;
+		squareVelocity.y = velocityY;
+	}
+
+	public void updateSquare(int elapsedTime) {
+		if (Math.abs(squareVelocity.x) < 1e-6 && Math.abs(squareVelocity.y) < 1e-6)
+			return;
+
+		Log.i("SurfaceView", "passou " + elapsedTime);
+		center.x += elapsedTime*squareVelocity.x;
+		center.y += elapsedTime*squareVelocity.y;
+		float acc = elapsedTime * 0.0001;
+		squareVelocity.x -= elapsedTime*0.0001;
+		squareVelocity.y -= elapsedTime*0.0001;
+	}
 
     public void setSwipeArea(float left, float top, float right, float bottom) {
         this.swipeArea[0] = left;

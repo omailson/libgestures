@@ -31,6 +31,7 @@ void pinchStarted();
 void pinchFinished();
 void tap(int, int, int, int);
 void pan(int, int, int, int);
+void panFinished(int, int, float, float);
 
 JNIEnv* getEnv()
 {
@@ -169,6 +170,11 @@ void updateGesture(Gesture *gesture)
         else
             pan(panGesture->x, panGesture->y, panGesture->deltaX, panGesture->deltaY);
 
+        if (panGesture->gestureState() == Gesture::GestureFinished)
+            panFinished(panGesture->x, panGesture->y, panGesture->velocityX, panGesture->velocityY);
+        LOG_INFO("Pan (%d, %d)", panGesture->x, panGesture->y);
+        LOG_INFO("Velocity (%f, %f)", panGesture->velocityX, panGesture->velocityY);
+
         if (panGesture->side == PanGesture::Left)
             LOG_INFO("Swipe Left");
         else if (panGesture->side == PanGesture::Top)
@@ -275,4 +281,12 @@ void pan(int x, int y, int deltaX, int deltaY)
     jmethodID method = env->GetMethodID(clazz, "pan", "(IIII)V");
     if (method)
         env->CallVoidMethod(mainActivity, method, x, y, deltaX, deltaY);
+}
+
+void panFinished(int x, int y, float velocityX, float velocityY) {
+    JNIEnv *env = getEnv();
+    jclass clazz = env->GetObjectClass(mainActivity);
+    jmethodID method = env->GetMethodID(clazz, "panFinished", "(IIFF)V");
+    if (method)
+        env->CallVoidMethod(mainActivity, method, x, y, velocityX, velocityY);
 }

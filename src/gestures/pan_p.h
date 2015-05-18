@@ -19,6 +19,8 @@ public:
     int startX;
     int startY;
     PanTouchPoint panTouchPoints[10];
+    long long int timestamp;
+    long long int lastTimestamp;
 };
 
 class PanRecognizerPrivate {

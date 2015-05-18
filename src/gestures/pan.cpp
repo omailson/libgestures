@@ -5,6 +5,9 @@
 #include "utils/vector2d.h"
 #include <math.h>
 
+#include "../logger.h"
+#define LOG_TAG "PanGesture"
+
 #define PI 3.14159265
 
 static inline float fastSqrt(float value)
@@ -30,12 +33,16 @@ static inline float fastSqrt(float value)
 
 PanGesturePrivate::PanGesturePrivate()
     : state(NoGesture)
+    , timestamp(0)
+    , lastTimestamp(0)
 {
 }
 
 PanGesture::PanGesture()
     : Gesture()
     , side(PanGesture::NoSide)
+    , velocityX(0)
+    , velocityY(0)
     , numTouchPoints(0)
     , d(new PanGesturePrivate())
 {
@@ -63,6 +70,17 @@ PanRecognizer::PanRecognizer()
     : GestureRecognizer()
     , d(new PanRecognizerPrivate)
 {
+}
+
+GestureRecognizer::Action PanRecognizer::recognize(Gesture *baseGesture, long long int timestamp)
+{
+    PanGesture *gesture = static_cast<PanGesture*>(baseGesture);
+    if (gesture->d->state == PanGesturePrivate::Moving) {
+        gesture->d->timestamp = timestamp;
+        return MayBeGesture;
+    } else {
+        return Ignore;
+    }
 }
 
 GestureRecognizer::Action PanRecognizer::recognize(Gesture *baseGesture, const GestureTouchEvent &ev)
@@ -205,6 +223,14 @@ void PanRecognizer::updateGesture(PanGesture *gesture, const GestureTouchEvent &
     gesture->deltaY = y - gesture->y;
     gesture->x = x;
     gesture->y = y;
+
+    int deltaTime = gesture->d->timestamp - gesture->d->lastTimestamp;
+    LOG_INFO("deltaTime %d", deltaTime);
+    gesture->d->lastTimestamp = gesture->d->timestamp;
+    if (deltaTime > 0) {
+        gesture->velocityX = gesture->deltaX / (float) deltaTime;
+        gesture->velocityY = gesture->deltaY / (float) deltaTime;
+    }
 }
 
 void PanRecognizer::setBounds(int x, int y, int width, int height)
